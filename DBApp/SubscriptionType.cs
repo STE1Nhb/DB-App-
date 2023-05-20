@@ -10,17 +10,23 @@ namespace DBApp
 {
     public class SubscriptionType
     {
+        [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int TypeId { get; set; }
+        
+        //[Column(Order = 2)]
+        public int SubscriptionId { get; set; }
+        [Required]
         public string Type { get; set; }
         public virtual ICollection<SubscriberSubscription> SubscribersSubscriptions { get; set; }
-        public virtual ICollection<SubscriptionPrice> SubscriptionsPrices { get; set; }
+
+        public virtual SubscriberSubscription SubscriptionPrice { get; set; }
+        //public virtual ICollection<SubscriptionPrice> SubscriptionPrices { get; set; }
 
         public SubscriptionType()
         {
             this.SubscribersSubscriptions = new HashSet<SubscriberSubscription>();
-            this.SubscriptionsPrices = new HashSet<SubscriptionPrice>();
+            //this.SubscriptionPrices = new HashSet<SubscriptionPrice>();
         }
     }
 }

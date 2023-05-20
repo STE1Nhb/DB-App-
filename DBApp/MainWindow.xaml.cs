@@ -34,13 +34,13 @@ namespace DBApp
 
         public void AddSubscriber(string email, DateTime birthDate)
         {
-            using(var subs = new UserContext()) 
+            using(var subs = new DbAppContext()) 
             {
                 var sub = new Subscriber() {Email = email, BirthDate = birthDate };
-
+                
                 subs.Subscribers.Add(sub);
                 subs.SaveChanges();
-
+                
                 clickOut.Text = subs.Subscribers.First().Email + " " + subs.Subscribers.Count();
             }
         }

@@ -10,17 +10,20 @@ namespace DBApp
 {
     public class SubscriptionPrice
     {
-        [Key]
+        [Required]
+        [ForeignKey("SubscriptionType")]
+        //[Column(Order = 2)]
         public int SubscriptionId { get; set; }
+        [Required]
         [Key]
         public int Price { get; set; }
 
         public SubscriptionPrice()
         {
-            this.PurchasesConfirmations = new HashSet<PurchaseConfirmation>();
+            this.PurchaseConfirmations = new HashSet<PurchaseConfirmation>();
         }
         public virtual SubscriptionType SubscriptionType { get; set; }
 
-        public virtual ICollection<PurchaseConfirmation> PurchasesConfirmations { get; set; }
+        public virtual ICollection<PurchaseConfirmation> PurchaseConfirmations { get; set; }
     }
 }

@@ -10,21 +10,35 @@ namespace DBApp
 {
     public class PurchaseConfirmation
     {
-        [Column(Order = 0)]
+        [Required]  
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1)]
         public int PurchaseId { get; set; }
-        [Key, Column(Order = 1)]
+        [Required]
+        //[Key]
+        [ForeignKey("SubscriberSubscription")]
+        [Column(Order = 2)]
         public int SubscriberId { get; set; }
-        [Key, Column(Order = 2)]
+        [Required]
+        [Column(Order = 3)]
+        //[Key]
+        [ForeignKey("SubscriberSubscription")]
         public int SubscriptionId { get; set; }
+        [Required]
+        [ForeignKey("SubscriptionPrice")]
         public int Price { get; set; }
-        public PurchaseConfirmation()
-        {
-            this.ExpirationDate = new HashSet<ExpirationDate>();
-        }
+        //public PurchaseConfirmation()
+        //{
+        //    this.ExpirationDates = new HashSet<ExpirationDate>();
+        //}
+        [Required]
         public DateTime PurchaseDate { get; set; }
+
         public virtual SubscriptionPrice SubscriptionPrice { get; set; }
         public virtual SubscriberSubscription SubscriberSubscription { get; set; }
+        public virtual ExpirationDate ExpirationDate { get; set; }
 
-        public virtual ICollection<ExpirationDate> ExpirationDate { get; set; }
+        //public virtual ICollection<ExpirationDate> ExpirationDates { get; set; }
     }
 }

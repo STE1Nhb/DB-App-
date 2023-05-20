@@ -66,12 +66,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ExpirationDate.cs" />
+    <Compile Include="Migrations\202305202052191_InitialDataBase.cs" />
+    <Compile Include="Migrations\202305202052191_InitialDataBase.designer.cs">
+      <DependentUpon>202305202052191_InitialDataBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PurchaseConfirmation.cs" />
     <Compile Include="Subscriber.cs" />
     <Compile Include="SubscriberSubscription.cs" />
     <Compile Include="SubscriptionPrice.cs" />
     <Compile Include="SubscriptionType.cs" />
-    <Compile Include="UserContext.cs" />
+    <Compile Include="DbAppContext.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -99,6 +104,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\202305202052191_InitialDataBase.resx">
+      <DependentUpon>202305202052191_InitialDataBase.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

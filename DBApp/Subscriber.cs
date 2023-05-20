@@ -12,12 +12,18 @@ namespace DBApp
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int SubsciberId { get; private set; }
+        [Column(Order = 1)]
+        public int SubscriberId { get; set; }
+        [Required]
         public string Email { get; set; }
+        [Required]
         public DateTime BirthDate { get; set; }
+
+        public virtual SubscriberSubscription SubscriberSubscriber { get; set; }
+
         public virtual ICollection<SubscriberSubscription> SubscribersSubscriptions { get; set; }
 
-        public Subscriber() 
+        public Subscriber()
         {
             this.SubscribersSubscriptions = new HashSet<SubscriberSubscription>();
         }

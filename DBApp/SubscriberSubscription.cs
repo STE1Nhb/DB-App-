@@ -11,20 +11,24 @@ namespace DBApp
 {
     public class SubscriberSubscription
     {
+        [Required]
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1)]
+        [ForeignKey("Subscriber")]
         public int SubscriberId { get; set; }
+        [Required]
         [Key]
+        [Column(Order = 2)]
+        [ForeignKey("SubscriptionType")]
         public int SubscriptionId { get; set; }
 
         public SubscriberSubscription()
         {
-            this.PurchasesConfirmations = new HashSet<PurchaseConfirmation>();
+            this.PurchaseConfirmations = new HashSet<PurchaseConfirmation>();
         }
         public virtual SubscriptionType SubscriptionType { get; set; }
         public virtual Subscriber Subscriber { get; set; }
-        public virtual ICollection<PurchaseConfirmation> PurchasesConfirmations { get; set; }
+        public virtual ICollection<PurchaseConfirmation> PurchaseConfirmations { get; set; }
 
-        //public virtual PlayersScores PlayersScores { get; set; }
     }
 }
