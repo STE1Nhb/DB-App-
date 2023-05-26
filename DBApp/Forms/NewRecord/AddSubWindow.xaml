@@ -1,0 +1,117 @@
+﻿<Window x:Class="DBApp.Forms.NewRecord.AddSubWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DBApp.Forms.NewRecord"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Title="New Subscriber" Height="240" Width="420">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="50*"/>
+        </Grid.ColumnDefinitions>
+        <Button 
+            x:Name="btnOk"
+            Grid.Row="3" 
+            Grid.Column="0"
+            Width ="80"
+            Height="25"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Content="Ok"
+            Click="btnOk_Click"
+        />
+        <Button 
+            x:Name="btnCancel"
+            Grid.Row="3" 
+            Grid.Column="1"
+            Width ="80"
+            Height="25"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Content="Cancel"
+            Click="btnCancel_Click"
+        />
+        <TextBlock 
+            Margin="20,6,15,10"
+            Width="172"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Text="E-Mail &#x09; &#x09;:"
+            TextAlignment="Left"
+            FontSize="20"
+        />
+        <TextBlock
+            Grid.Row="1"
+            Margin="20,6,15,10"
+            Width="172"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Text="Birth Date &#x09;:"
+            TextAlignment="Left"
+            FontSize="20"
+        />
+        <TextBlock
+            x:Name="emailPlaceholder"
+            Grid.Row="0" 
+            Grid.Column="1"
+            Margin="15,0,0,1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Opacity="1"
+            Text="Enter E-Mail"
+            TextAlignment="Justify"
+        />
+        <TextBlock
+            x:Name="datePlaceholder"
+            Grid.Row="1" 
+            Grid.Column="1"
+            Margin="15,0,0,1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Opacity="1"
+            Text="Enter birth date"
+            TextAlignment="Justify"
+        />
+        
+        <TextBox
+            x:Name="tbEmail"
+            Grid.Row="0" 
+            Grid.Column="1" 
+            Margin="10,20"
+            Padding="0,3"
+            Width="auto"
+            Height="25"
+            VerticalAlignment="Center"
+            IsKeyboardFocusedChanged="tbEmail_IsKeyboardFocused"
+            Panel.ZIndex="1"
+            Opacity="0.7"
+            TextAlignment="Justify"
+        />
+
+        <TextBox
+            x:Name="tbDate"
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="10,20"
+            Padding="0,3"
+            Width="auto"
+            Height="25"
+            VerticalAlignment="Center"
+            IsKeyboardFocusedChanged="tbDate_IsKeyboardFocused"
+            Panel.ZIndex="1"
+            Opacity="0.7"
+            TextAlignment="Justify"
+        />
+    </Grid>
+</Window>
