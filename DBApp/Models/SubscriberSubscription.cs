@@ -9,16 +9,18 @@ using System.Threading.Tasks;
 
 namespace DBApp
 {
+    [Table("subscribers_subscriptions")]
     public class SubscriberSubscription
     {
         [Required]
         [Key]
-        [Column(Order = 1)]
+        [Column("subscriber_id",Order = 1)]
         [ForeignKey("Subscriber")]
         public int SubscriberId { get; set; }
+
         [Required]
         [Key]
-        [Column(Order = 2)]
+        [Column("type_id",Order = 2)]
         [ForeignKey("SubscriptionType")]
         public int SubscriptionId { get; set; }
 

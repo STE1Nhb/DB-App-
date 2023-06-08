@@ -8,15 +8,19 @@ using System.Threading.Tasks;
 
 namespace DBApp
 {
+    [Table("subscription_prices")]
     public class SubscriptionPrice
     {
+        [Column("type_id")]
         [Required]
+        [Key]
         [ForeignKey("SubscriptionType")]
         //[Column(Order = 2)]
         public int SubscriptionId { get; set; }
+
+        [Column("subscription_price")]
         [Required]
-        [Key]
-        public int Price { get; set; }
+        public float Price { get; set; }
 
         public SubscriptionPrice()
         {

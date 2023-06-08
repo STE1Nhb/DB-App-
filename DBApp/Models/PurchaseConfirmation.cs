@@ -8,30 +8,32 @@ using System.Threading.Tasks;
 
 namespace DBApp
 {
+    [Table("purchase_confirmations")]
     public class PurchaseConfirmation
     {
         [Required]  
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 1)]
+        [Column("purchase_id",Order = 1)]
         public int PurchaseId { get; set; }
+
         [Required]
         //[Key]
         [ForeignKey("SubscriberSubscription")]
-        [Column(Order = 2)]
+        [Column("subscriber_id",Order = 2)]
         public int SubscriberId { get; set; }
+
         [Required]
-        [Column(Order = 3)]
+        [Column("type_id",Order = 3)]
         //[Key]
         [ForeignKey("SubscriberSubscription")]
         public int SubscriptionId { get; set; }
+
+        [Column("subscription_price")]
         [Required]
-        [ForeignKey("SubscriptionPrice")]
-        public int Price { get; set; }
-        //public PurchaseConfirmation()
-        //{
-        //    this.ExpirationDates = new HashSet<ExpirationDate>();
-        //}
+        public float Price { get; set; }
+
+        [Column("purchase_date")]
         [Required]
         public DateTime PurchaseDate { get; set; }
 

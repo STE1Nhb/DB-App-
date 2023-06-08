@@ -12,17 +12,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DBApp.Forms.NewRecord
+namespace DBApp.Forms.UpdateRecord
 {
-    public partial class AddSubscriptionWin : Window
+    /// <summary>
+    /// Interaction logic for UpdSubSubscriptionWindow.xaml
+    /// </summary>
+    public partial class UpdSubSubscriptionWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
-        public AddSubscriptionWin(MainWindow thisMainWindow)
+        private int TargetId { get; set; }
+        public UpdSubSubscriptionWin(int targetId, MainWindow thisMainWindow)
         {
             ThisMainWindow = thisMainWindow;
+            TargetId = targetId;
             InitializeComponent();
         }
-
 
         /// <summary>
         /// Handles the IsKeyboardFocused event of the tbType control.
@@ -61,7 +65,6 @@ namespace DBApp.Forms.NewRecord
             MessageBoxHandler(sender);
         }
 
-
         /// <summary>
         /// Messages the user about an attempt to perform an action.
         /// </summary>
@@ -82,15 +85,22 @@ namespace DBApp.Forms.NewRecord
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
-                            using (var subs = new DbAppContext())
+                            if (int.TryParse(tbType.Text.Trim(), out int type))
                             {
-                                var subscription = new SubscriptionType() { Type = tbType.Text.Trim() };
+                                using (var subs = new DbAppContext())
+                                {
+                                    var subSubscription = subs.SubscribersSubscriptions.SingleOrDefault(s => s.SubscriberId == TargetId);
+                                    subSubscription.SubscriptionId = type;
 
-                                subs.SubscriptionTypes.Add(subscription);
-
-                                subs.SaveChanges();
-                                ThisMainWindow.RefreshDataGrid();
-                                ClearFields();
+                                    subs.SaveChanges();
+                                    ThisMainWindow.RefreshDataGrid();
+                                    this.Close();
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Please make sure that all fields are filled out in the right way.",
+                                    "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         break;
                     }
@@ -106,10 +116,6 @@ namespace DBApp.Forms.NewRecord
                     break;
                 }
             }
-        }
-        private void ClearFields()
-        {
-            tbType.Clear();
         }
     }
 }

@@ -1,0 +1,84 @@
+﻿<Window x:Class="DBApp.Forms.UpdateRecord.UpdSubTypeWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DBApp.Forms.UpdateRecord"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Title="Update Subscription Type" Height="240" Width="420">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="50*"/>
+        </Grid.ColumnDefinitions>
+        <Button 
+            x:Name="btnOk"
+            Grid.Row="3" 
+            Grid.Column="0"
+            Width ="80"
+            Height="25"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Content="Ok"
+            Click="btnOk_Click"
+        />
+        <Button 
+            x:Name="btnCancel"
+            Grid.Row="3" 
+            Grid.Column="1"
+            Width ="80"
+            Height="25"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Content="Cancel"
+            Click="btnCancel_Click"
+        />
+        <TextBlock
+            Grid.Row = "0"
+            Grid.Column = "0"
+            Margin="20,6,15,10"
+            Width="172"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Text="Subscription type  :"
+            TextAlignment="Left"
+            FontSize="20"
+        />
+
+        <TextBlock
+            x:Name="typePlaceholder"
+            Grid.Row="0" 
+            Grid.Column="1"
+            Margin="15,0,0,1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Opacity="1"
+            Text="Enter new subscription name"
+            TextAlignment="Justify"
+        />
+
+
+        <TextBox
+            x:Name="tbType"
+            Grid.Row="0" 
+            Grid.Column="1" 
+            Margin="10,20"
+            Padding="0,3"
+            Width="auto"
+            Height="25"
+            VerticalAlignment="Center"
+            IsKeyboardFocusedChanged="tbType_IsKeyboardFocused"
+            Panel.ZIndex="1"
+            Opacity="0.7"
+            TextAlignment="Justify"
+        />
+    </Grid>
+</Window>

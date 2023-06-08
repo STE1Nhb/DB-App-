@@ -16,8 +16,10 @@ namespace DBApp.Forms.NewRecord
 {
     public partial class AddSubSubscriptionWin : Window
     {
-        public AddSubSubscriptionWin()
+        private MainWindow ThisMainWindow { get; set; }
+        public AddSubSubscriptionWin(MainWindow thisMainWindow)
         {
+            ThisMainWindow = thisMainWindow;
             InitializeComponent();
         }
 
@@ -101,7 +103,10 @@ namespace DBApp.Forms.NewRecord
                                 {
                                     var subSubscription = new SubscriberSubscription() { SubscriberId = sub, SubscriptionId = type };
                                     subs.SubscribersSubscriptions.Add(subSubscription);
+
                                     subs.SaveChanges();
+                                    ThisMainWindow.RefreshDataGrid();
+                                    ClearFields();
                                 }
                             }
                             else
@@ -109,7 +114,7 @@ namespace DBApp.Forms.NewRecord
                                 MessageBox.Show("Please make sure that all fields are filled out in the right way.",
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                            break;
+                        break;
                     }
                 }
             }
@@ -120,9 +125,14 @@ namespace DBApp.Forms.NewRecord
                 {
                     case MessageBoxResult.Yes:
                         this.Close();
-                        break;
+                    break;
                 }
             }
+        }
+        private void ClearFields()
+        {
+            tbSub.Clear();
+            tbType.Clear();
         }
     }
 }

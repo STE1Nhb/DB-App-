@@ -17,6 +17,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,7 +30,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -42,6 +42,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -81,6 +82,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Forms\IdRecieverWindow.xaml.cs">
+      <DependentUpon>IdRecieverWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Forms\NewRecord\AddConfirmationWindow.xaml.cs">
       <DependentUpon>AddConfirmationWindow.xaml</DependentUpon>
     </Compile>
@@ -93,11 +97,26 @@
     <Compile Include="Forms\NewRecord\AddSubSubscriptionWindow.xaml.cs">
       <DependentUpon>AddSubSubscriptionWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\ExpirationDate.cs" />
-    <Compile Include="Migrations\202305202052191_InitialDataBase.cs" />
-    <Compile Include="Migrations\202305202052191_InitialDataBase.designer.cs">
-      <DependentUpon>202305202052191_InitialDataBase.cs</DependentUpon>
+    <Compile Include="Forms\UpdateRecord\UpdConfirmsWindow.xaml.cs">
+      <DependentUpon>UpdConfirmsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\UpdateRecord\UpdPriceWindow.xaml.cs">
+      <DependentUpon>UpdPriceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateRecord\UpdSubSubscriptionWindow.xaml.cs">
+      <DependentUpon>UpdSubSubscriptionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateRecord\UpdSubTypeWindow.xaml.cs">
+      <DependentUpon>UpdSubTypeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateRecord\UpdSubWindow.xaml.cs">
+      <DependentUpon>UpdSubWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306061943033_InitialDb.cs" />
+    <Compile Include="Migrations\202306061943033_InitialDb.designer.cs">
+      <DependentUpon>202306061943033_InitialDb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExpirationDate.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\PurchaseConfirmation.cs" />
     <Compile Include="Models\Subscriber.cs" />
@@ -108,6 +127,10 @@
     <Compile Include="Forms\NewRecord\AddSubWindow.xaml.cs">
       <DependentUpon>AddSubWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Forms\IdRecieverWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Forms\NewRecord\AddConfirmationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -140,6 +163,26 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Forms\UpdateRecord\UpdConfirmsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\UpdateRecord\UpdPriceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\UpdateRecord\UpdSubSubscriptionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\UpdateRecord\UpdSubTypeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\UpdateRecord\UpdSubWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -155,8 +198,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\202305202052191_InitialDataBase.resx">
-      <DependentUpon>202305202052191_InitialDataBase.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202306061943033_InitialDb.resx">
+      <DependentUpon>202306061943033_InitialDb.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -183,7 +226,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Database\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -80,5 +80,33 @@
             FontSize="25"
             Click="btnAdd_Click"
         />
+
+        <Button
+            x:Name="btnUpd"
+            Grid.Row="1" 
+            Grid.Column="0"
+            Margin="10,70"
+            Width="120"
+            Height="50"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Content="Update"
+            FontSize="25"
+            Click="btnUpd_Click"
+        />
+
+        <Button
+            x:Name="btnDel"
+            Grid.Row="1" 
+            Grid.Column="0"
+            Margin="10,130"
+            Width="120"
+            Height="50"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Content="Delete"
+            FontSize="25"
+            Click="btnDel_Click"
+        />
     </Grid>
 </Window>

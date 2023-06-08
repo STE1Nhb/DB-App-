@@ -12,32 +12,36 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DBApp.Forms.NewRecord
+namespace DBApp.Forms.UpdateRecord
 {
-    public partial class AddSubscriptionWin : Window
+    /// <summary>
+    /// Interaction logic for UpdPriceWin.xaml
+    /// </summary>
+    public partial class UpdPriceWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
-        public AddSubscriptionWin(MainWindow thisMainWindow)
+        private int TargetId { get; set; }
+        public UpdPriceWin(int targetId, MainWindow thisMainWindow)
         {
             ThisMainWindow = thisMainWindow;
+            TargetId = targetId;
             InitializeComponent();
         }
 
-
         /// <summary>
-        /// Handles the IsKeyboardFocused event of the tbType control.
+        /// Handles the IsKeyboardFocused event of the tbPrice control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-        private void tbType_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
+        private void tbPrice_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbType.IsKeyboardFocused == true)
+            if (tbPrice.IsKeyboardFocused == true)
             {
-                typePlaceholder.Visibility = Visibility.Collapsed;
+                pricePlaceholder.Visibility = Visibility.Collapsed;
             }
-            else if (!tbType.IsKeyboardFocused && string.IsNullOrEmpty(tbType.Text))
+            else if (!tbPrice.IsKeyboardFocused && string.IsNullOrEmpty(tbPrice.Text))
             {
-                typePlaceholder.Visibility = Visibility.Visible;
+                pricePlaceholder.Visibility = Visibility.Visible;
             }
         }
 
@@ -61,9 +65,8 @@ namespace DBApp.Forms.NewRecord
             MessageBoxHandler(sender);
         }
 
-
         /// <summary>
-        /// Messages the user about an attempt to perform an action.
+        /// Messages the user of an attempt to perform an action
         /// </summary>
         /// <param name="sender">The sender.</param>
         private void MessageBoxHandler(object sender)
@@ -71,9 +74,9 @@ namespace DBApp.Forms.NewRecord
             MessageBoxResult message;
             if (sender == btnOk)
             {
-                if (string.IsNullOrEmpty(tbType.Text))
+                if (string.IsNullOrEmpty(tbPrice.Text))
                 {
-                    MessageBox.Show("Please fill all available fields.",
+                    MessageBox.Show("Please fill at least one field to update.",
                         "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
@@ -82,15 +85,22 @@ namespace DBApp.Forms.NewRecord
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
-                            using (var subs = new DbAppContext())
+                            if (float.TryParse(tbPrice.Text.Trim(), out float price))
                             {
-                                var subscription = new SubscriptionType() { Type = tbType.Text.Trim() };
+                                using (var subs = new DbAppContext())
+                                {
+                                    var subPrice = subs.SubscriptionPrices.SingleOrDefault(s => s.SubscriptionId == TargetId);
+                                    subPrice.Price = price;
 
-                                subs.SubscriptionTypes.Add(subscription);
-
-                                subs.SaveChanges();
-                                ThisMainWindow.RefreshDataGrid();
-                                ClearFields();
+                                    subs.SaveChanges();
+                                    ThisMainWindow.RefreshDataGrid();
+                                    this.Close();
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Please make sure that all fields are filled out in the right way.",
+                                    "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         break;
                     }
@@ -106,10 +116,6 @@ namespace DBApp.Forms.NewRecord
                     break;
                 }
             }
-        }
-        private void ClearFields()
-        {
-            tbType.Clear();
         }
     }
 }

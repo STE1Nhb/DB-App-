@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,17 +13,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DBApp.Forms.NewRecord
+namespace DBApp.Forms.UpdateRecord
 {
     /// <summary>
-    /// Interaction logic for AddConfirmationWindow.xaml
+    /// Interaction logic for UpdConfirmsWindow.xaml
     /// </summary>
-    public partial class AddConfirmationWin : Window
+    public partial class UpdConfirmationWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
-        public AddConfirmationWin(MainWindow thisMainWindow)
+        private int TargetId { get; set; }
+        public UpdConfirmationWin(int targetId, MainWindow thisMainWindow)
         {
             ThisMainWindow = thisMainWindow;
+            TargetId = targetId;
             InitializeComponent();
         }
 
@@ -61,7 +62,7 @@ namespace DBApp.Forms.NewRecord
                 typePlaceholder.Visibility = Visibility.Visible;
             }
         }
-       
+
         /// <summary>
         /// Handles the IsKeyboardFocusedChanged event of the tbDate control.
         /// </summary>
@@ -108,10 +109,10 @@ namespace DBApp.Forms.NewRecord
             MessageBoxResult message;
             if (sender == btnOk)
             {
-                if (string.IsNullOrEmpty(tbSub.Text) || string.IsNullOrEmpty(tbType.Text) || 
+                if (string.IsNullOrEmpty(tbSub.Text) && string.IsNullOrEmpty(tbType.Text) &&
                     string.IsNullOrEmpty(tbDate.Text))
                 {
-                    MessageBox.Show("Please fill all available fields.",
+                    MessageBox.Show("Please fill at least one field to update.",
                         "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
@@ -120,26 +121,50 @@ namespace DBApp.Forms.NewRecord
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
-                            if (int.TryParse(tbSub.Text.Trim(), out int sub) == true && int.TryParse(tbType.Text.Trim(), out int type) &&
-                                DateTime.TryParse(tbDate.Text.Trim(), out DateTime date))
+                            int sub = 0;
+                            int type = 0;
+                            DateTime date = DateTime.Now;
+
+                            if ( (String.IsNullOrEmpty(tbSub.Text) || int.TryParse(tbSub.Text.Trim(), out sub) == true) && 
+                                (String.IsNullOrEmpty(tbType.Text) || int.TryParse(tbType.Text.Trim(), out type) == true) &&
+                                (String.IsNullOrEmpty(tbDate.Text) || DateTime.TryParse(tbDate.Text.Trim(), out date) == true) )
                             {
                                 using (var subs = new DbAppContext())
                                 {
+                                    var confirm = subs.PurchaseConfirmations.SingleOrDefault(s => s.PurchaseId == TargetId);
                                     var price = (float)
                                         (
                                             subs.SubscriptionPrices
-                                            .Where(id => id.SubscriptionId == type)
+                                            .Where(id => type == 0 ? id.SubscriptionId == confirm.SubscriptionId : id.SubscriptionId == type)
                                             .Select(p => p.Price)
                                             .First()
                                         );
 
-                                    var purchase = new PurchaseConfirmation() { SubscriberId = sub, SubscriptionId = type, Price = price, PurchaseDate = date };
-                                    subs.PurchaseConfirmations.Add(purchase);
+                                    //var purchase = new PurchaseConfirmation() { SubscriberId = sub, SubscriptionId = type, Price = price, PurchaseDate = date };
+                                    //subs.PurchaseConfirmations.Add(purchase);
 
-                                    subs.SaveChanges();
-                                    ThisMainWindow.RefreshDataGrid();
-                                    ExpirationDateCount();
-                                    ClearFields();
+                                    //subs.SaveChanges();
+                                    //ThisMainWindow.RefreshDataGrid();
+                                    //ClearFields();
+
+                                    confirm.SubscriberId = String.IsNullOrEmpty(tbSub.Text) ? confirm.SubscriberId : sub;
+                                    confirm.SubscriptionId = String.IsNullOrEmpty(tbType.Text) ? confirm.SubscriptionId : type;
+                                    confirm.PurchaseDate = String.IsNullOrEmpty(tbDate.Text) ? confirm.PurchaseDate : date;
+                                    confirm.Price = price;
+
+                                    try
+                                    {
+                                        subs.SaveChanges();
+                                        ExpirationDateCount();
+                                        ThisMainWindow.RefreshDataGrid();
+                                        this.Close();
+                                    }
+                                    catch(DbUpdateException)
+                                    {
+                                        MessageBox.Show("Please make sure that subscription type of this subscriber matches up " +
+                                            "with subscription type in SubscribersSubscriptions table.", "Something went wrong",
+                                            MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
                                 }
                             }
                             else
@@ -164,37 +189,25 @@ namespace DBApp.Forms.NewRecord
         }
         private void ExpirationDateCount()
         {
-            using (var subs = new DbAppContext())
+            if (!String.IsNullOrEmpty(tbDate.Text))
             {
-                var lastPurchaseId = Convert.ToInt32
-                (
-                    subs.PurchaseConfirmations
-                    .OrderByDescending(id => id.PurchaseId)
-                    .Select(id => id.PurchaseId)
-                    .First()
-                );
+                using (var subs = new DbAppContext())
+                {
+                        var expDate = subs.ExpirationDates.SingleOrDefault(s => s.PurchaseId == TargetId);
 
-                var futureDate = Convert.ToDateTime
-                    (
-                        subs.PurchaseConfirmations
-                        .Where(id => id.PurchaseId == lastPurchaseId)
-                        .Select(date => date.PurchaseDate)
-                        .First()
-                    )
-                    .AddMonths(1);
-                
-                var expDate = new ExpirationDate() { PurchaseId = lastPurchaseId, ExpiryDate = futureDate };
-                subs.ExpirationDates.Add(expDate);
-                subs.SaveChanges();
+                        var futureDate = Convert.ToDateTime
+                            (
+                                subs.PurchaseConfirmations
+                                .Where(id => id.PurchaseId == TargetId)
+                                .Select(date => date.PurchaseDate)
+                                .First()
+                            )
+                            .AddMonths(1);
 
-                
+                        expDate.ExpiryDate = futureDate;
+                        subs.SaveChanges();
+                }
             }
-        }
-        private void ClearFields()
-        {
-            tbSub.Clear();
-            tbType.Clear();
-            tbDate.Clear();
         }
     }
 }

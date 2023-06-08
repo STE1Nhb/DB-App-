@@ -8,14 +8,20 @@ using System.Threading.Tasks;
 
 namespace DBApp
 {
+    [Table("subscribers")]
     public class Subscriber
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 1)]
+        [Column("subscriber_id",Order = 1)]
         public int SubscriberId { get; set; }
+
+        [Column("subscriber_email")]
+        [MaxLength(50)]
         [Required]
         public string Email { get; set; }
+
+        [Column("subscriber_birth_date")]
         [Required]
         public DateTime BirthDate { get; set; }
 

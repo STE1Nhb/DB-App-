@@ -8,14 +8,18 @@ using System.Threading.Tasks;
 
 namespace DBApp
 {
+    [Table("subscription_types")]
     public class SubscriptionType
     {
+        [Column("type_id")]
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        
         //[Column(Order = 2)]
         public int SubscriptionId { get; set; }
+
+        [Column("subscription_type")]
+        [MaxLength(30)]
         [Required]
         public string Type { get; set; }
         public virtual ICollection<SubscriberSubscription> SubscribersSubscriptions { get; set; }

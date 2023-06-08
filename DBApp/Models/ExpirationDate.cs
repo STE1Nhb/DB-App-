@@ -8,15 +8,18 @@ using System.Threading.Tasks;
 
 namespace DBApp
 {
+    [Table("expiry_dates")]
     public class ExpirationDate
     {
         [Required]
         [Key]
         [ForeignKey("PurchaseConfirmation")]
-        [Column(Order = 1)]
+        [Column("purchase_id",Order = 1)]
         public int PurchaseId { get; set; }
+
+        [Column("expiry_date")]
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime ExpiryDate { get; set; }
 
         public virtual PurchaseConfirmation PurchaseConfirmation { get; set; }
     }

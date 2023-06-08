@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Mapping;
+using System.ComponentModel;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,20 +13,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DBApp.Forms.NewRecord
+namespace DBApp.Forms.UpdateRecord
 {
-    public partial class AddSubWin : Window
+    /// <summary>
+    /// Interaction logic for UpdSubWindow.xaml
+    /// </summary>
+    public partial class UpdSubWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
-        public AddSubWin(MainWindow thisMainWindow)
+        private int TargetId { get; set; }
+        public UpdSubWin(int targetId, MainWindow thisMainWindow)
         {
             ThisMainWindow = thisMainWindow;
+            TargetId = targetId;
             InitializeComponent();
         }
 
         private void tbEmail_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if(tbEmail.IsKeyboardFocused == true) 
+            if (tbEmail.IsKeyboardFocused == true)
             {
                 emailPlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -43,7 +47,7 @@ namespace DBApp.Forms.NewRecord
             {
                 datePlaceholder.Visibility = Visibility.Collapsed;
             }
-            else if(!tbDate.IsKeyboardFocused && string.IsNullOrEmpty(tbDate.Text))
+            else if (!tbDate.IsKeyboardFocused && string.IsNullOrEmpty(tbDate.Text))
             {
                 datePlaceholder.Visibility = Visibility.Visible;
             }
@@ -63,9 +67,9 @@ namespace DBApp.Forms.NewRecord
             MessageBoxResult message;
             if (sender == btnOk)
             {
-                if ((string.IsNullOrEmpty(tbDate.Text) || string.IsNullOrEmpty(tbEmail.Text)))
+                if (string.IsNullOrEmpty(tbDate.Text) && string.IsNullOrEmpty(tbEmail.Text))
                 {
-                    MessageBox.Show("Please fill all available fields.",
+                    MessageBox.Show("Please fill at least one field to update.",
                         "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
@@ -74,23 +78,25 @@ namespace DBApp.Forms.NewRecord
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
-                            if (DateTime.TryParse(tbDate.Text.Trim(), out DateTime date) == true && tbEmail.Text.Contains('@'))
+                            DateTime date = DateTime.Now;
+
+                            if ( (String.IsNullOrEmpty(tbEmail.Text) || (tbEmail.Text.Contains("@") && tbEmail.Text.Length < 50) ) && 
+                                (String.IsNullOrEmpty(tbDate.Text) || DateTime.TryParse(tbDate.Text.Trim(), out date)) )
                             {
                                 using (var subs = new DbAppContext())
                                 {
-                                    var sub = new Subscriber() { Email = tbEmail.Text.Trim(), BirthDate = date };
-
-                                    subs.Subscribers.Add(sub);
+                                    var sub = subs.Subscribers.SingleOrDefault(s => s.SubscriberId == TargetId);
+                                    sub.Email = String.IsNullOrEmpty(tbEmail.Text) ? sub.Email : tbEmail.Text.Trim();
+                                    sub.BirthDate = String.IsNullOrEmpty(tbDate.Text) ? sub.BirthDate : date;
 
                                     subs.SaveChanges();
                                     ThisMainWindow.RefreshDataGrid();
-                                    ClearFields();
+                                    this.Close();
                                 }
                             }
-
                             else
                             {
-                                MessageBox.Show("Please make sure that all fields are filled out in the right way.", 
+                                MessageBox.Show("Please make sure that all fields are filled out in the right way.",
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         break;
@@ -107,11 +113,6 @@ namespace DBApp.Forms.NewRecord
                     break;
                 }
             }
-        }
-        private void ClearFields()
-        {
-            tbEmail.Clear();
-            tbDate.Clear();
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿<Window x:Class="DBApp.Forms.NewRecord.AddConfirmationWin"
+﻿<Window x:Class="DBApp.Forms.UpdateRecord.UpdConfirmationWin"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DBApp.Forms.NewRecord"
+        xmlns:local="clr-namespace:DBApp.Forms.UpdateRecord"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Title="New Confirmation" Height="240" Width="420">
+        Title="Update Confirmation" Height="240" Width="420">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -43,7 +43,7 @@
             Content="Cancel"
             Click="btnCancel_Click"
         />
-        
+
         <TextBlock 
             Grid.Row="0"
             Grid.Column="0"
@@ -78,7 +78,7 @@
             TextAlignment="Left"
             FontSize="20"
         />
-        
+
 
         <TextBlock
             x:Name="subPlaceholder"
@@ -88,7 +88,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             Opacity="1"
-            Text="Enter subscriber ID"
+            Text="Enter new subscriber ID"
             TextAlignment="Justify"
         />
         <TextBlock
@@ -99,7 +99,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             Opacity="1"
-            Text="Enter subscription ID"
+            Text="Enter new subscription ID"
             TextAlignment="Justify"
         />
         <TextBlock
@@ -110,7 +110,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             Opacity="1"
-            Text="Enter purchase date"
+            Text="Enter new purchase date"
             TextAlignment="Justify"
         />
 

@@ -12,17 +12,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DBApp.Forms.NewRecord
+namespace DBApp.Forms.UpdateRecord
 {
-    public partial class AddSubscriptionWin : Window
+    /// <summary>
+    /// Interaction logic for UpdSubType.xaml
+    /// </summary>
+    public partial class UpdSubTypeWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
-        public AddSubscriptionWin(MainWindow thisMainWindow)
+        private int TargetId { get; set; }
+        public UpdSubTypeWin(int targetId, MainWindow thisMainWindow)
         {
             ThisMainWindow = thisMainWindow;
+            TargetId = targetId;
             InitializeComponent();
         }
-
 
         /// <summary>
         /// Handles the IsKeyboardFocused event of the tbType control.
@@ -73,7 +77,7 @@ namespace DBApp.Forms.NewRecord
             {
                 if (string.IsNullOrEmpty(tbType.Text))
                 {
-                    MessageBox.Show("Please fill all available fields.",
+                    MessageBox.Show("Please fill at least one field to update.",
                         "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
@@ -84,13 +88,12 @@ namespace DBApp.Forms.NewRecord
                         case MessageBoxResult.Yes:
                             using (var subs = new DbAppContext())
                             {
-                                var subscription = new SubscriptionType() { Type = tbType.Text.Trim() };
-
-                                subs.SubscriptionTypes.Add(subscription);
+                                var type = subs.SubscriptionTypes.SingleOrDefault(s => s.SubscriptionId == TargetId);
+                                type.Type = tbType.Text;
 
                                 subs.SaveChanges();
                                 ThisMainWindow.RefreshDataGrid();
-                                ClearFields();
+                                this.Close();
                             }
                         break;
                     }
@@ -106,10 +109,6 @@ namespace DBApp.Forms.NewRecord
                     break;
                 }
             }
-        }
-        private void ClearFields()
-        {
-            tbType.Clear();
         }
     }
 }

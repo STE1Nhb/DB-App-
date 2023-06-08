@@ -11,13 +11,16 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Data.Entity.Infrastructure.Design.Executor;
 
 namespace DBApp.Forms.NewRecord
 {
     public partial class AddPriceWin : Window
     {
-        public AddPriceWin()
+        private MainWindow ThisMainWindow { get; set; }
+        public AddPriceWin(MainWindow thisMainWindow)
         {
+            ThisMainWindow = thisMainWindow;
             InitializeComponent();
         }
 
@@ -95,13 +98,17 @@ namespace DBApp.Forms.NewRecord
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
-                            if (int.TryParse(tbType.Text.Trim(), out int type) == true && int.TryParse(tbPrice.Text.Trim(), out int price))
+                            if (int.TryParse(tbType.Text.Trim(), out int type) == true && float.TryParse(tbPrice.Text.Trim(), out float price))
                             {
                                 using (var subs = new DbAppContext())
                                 {
                                     var subPrice = new SubscriptionPrice() { SubscriptionId = type, Price = price };
                                     subs.SubscriptionPrices.Add(subPrice);
+
                                     subs.SaveChanges();
+                                    ThisMainWindow.RefreshDataGrid();
+                                    ClearFields();
+
                                 }
                             }
                             else
@@ -109,7 +116,7 @@ namespace DBApp.Forms.NewRecord
                                 MessageBox.Show("Please make sure that all fields are filled out in the right way.",
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                            break;
+                        break;
                     }
                 }
             }
@@ -120,9 +127,14 @@ namespace DBApp.Forms.NewRecord
                 {
                     case MessageBoxResult.Yes:
                         this.Close();
-                        break;
+                    break;
                 }
             }
+        }
+        private void ClearFields()
+        {
+            tbType.Clear();
+            tbPrice.Clear();
         }
     }
 }
