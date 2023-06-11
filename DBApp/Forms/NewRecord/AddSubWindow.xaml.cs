@@ -68,9 +68,15 @@ namespace DBApp.Forms.NewRecord
                     MessageBox.Show("Please fill all available fields.",
                         "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                else if(tbEmail.Text.Length > 50)
+                {
+                    MessageBox.Show("Please make sure that e-mail length does not exceed 50 characters.",
+                       "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 else
                 {
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = MessageBox.Show("Сarefully check the data you entered before adding it to the table.", 
+                        "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
@@ -99,7 +105,7 @@ namespace DBApp.Forms.NewRecord
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:

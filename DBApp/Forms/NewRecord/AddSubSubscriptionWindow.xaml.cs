@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,7 +94,8 @@ namespace DBApp.Forms.NewRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = MessageBox.Show("Сarefully check the data you entered before adding it to the table.", 
+                        "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
@@ -104,9 +106,18 @@ namespace DBApp.Forms.NewRecord
                                     var subSubscription = new SubscriberSubscription() { SubscriberId = sub, SubscriptionId = type };
                                     subs.SubscribersSubscriptions.Add(subSubscription);
 
-                                    subs.SaveChanges();
-                                    ThisMainWindow.RefreshDataGrid();
-                                    ClearFields();
+                                    try
+                                    {
+                                        subs.SaveChanges();
+                                        ThisMainWindow.RefreshDataGrid();
+                                        ClearFields();
+                                    }
+                                    catch(DbUpdateException)
+                                    {
+                                        MessageBox.Show("Please make sure that entered Subscriber Id or Subscription Id " +
+                                            "are existing.", "Something went wrong",
+                                            MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
                                 }
                             }
                             else
@@ -120,7 +131,7 @@ namespace DBApp.Forms.NewRecord
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:

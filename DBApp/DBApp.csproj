@@ -112,9 +112,9 @@
     <Compile Include="Forms\UpdateRecord\UpdSubWindow.xaml.cs">
       <DependentUpon>UpdSubWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202306061943033_InitialDb.cs" />
-    <Compile Include="Migrations\202306061943033_InitialDb.designer.cs">
-      <DependentUpon>202306061943033_InitialDb.cs</DependentUpon>
+    <Compile Include="Migrations\202306111650159_InitialDb.cs" />
+    <Compile Include="Migrations\202306111650159_InitialDb.designer.cs">
+      <DependentUpon>202306111650159_InitialDb.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ExpirationDate.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -198,8 +198,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\202306061943033_InitialDb.resx">
-      <DependentUpon>202306061943033_InitialDb.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202306111650159_InitialDb.resx">
+      <DependentUpon>202306111650159_InitialDb.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

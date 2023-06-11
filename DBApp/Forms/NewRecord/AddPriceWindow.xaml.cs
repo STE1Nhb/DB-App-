@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,20 +95,34 @@ namespace DBApp.Forms.NewRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = MessageBox.Show("Сarefully check the data you entered before adding it to the table.", 
+                        "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
-                            if (int.TryParse(tbType.Text.Trim(), out int type) == true && float.TryParse(tbPrice.Text.Trim(), out float price))
+                            float price;
+                            bool canConvert = tbPrice.Text.Contains(".") ? float.TryParse(tbPrice.Text.Replace(".", ","), out price) :
+                                float.TryParse(tbPrice.Text.Replace(".", ","), out price);
+
+                            if (int.TryParse(tbType.Text.Trim(), out int type) == true && canConvert && price > 0)
                             {
                                 using (var subs = new DbAppContext())
                                 {
                                     var subPrice = new SubscriptionPrice() { SubscriptionId = type, Price = price };
                                     subs.SubscriptionPrices.Add(subPrice);
 
-                                    subs.SaveChanges();
-                                    ThisMainWindow.RefreshDataGrid();
-                                    ClearFields();
+                                    try
+                                    {
+                                        subs.SaveChanges();
+                                        ThisMainWindow.RefreshDataGrid();
+                                        ClearFields();
+                                    }
+                                    catch(DbUpdateException)
+                                    {
+                                        MessageBox.Show("Please make sure that entered Subscription Id " +
+                                             "is existing one.", "Something went wrong",
+                                             MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
 
                                 }
                             }
@@ -122,7 +137,7 @@ namespace DBApp.Forms.NewRecord
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:

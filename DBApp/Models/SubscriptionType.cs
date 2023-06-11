@@ -24,12 +24,15 @@ namespace DBApp
         public string Type { get; set; }
         public virtual ICollection<SubscriberSubscription> SubscribersSubscriptions { get; set; }
 
+        [ForeignKey("SubscriptionId")]
+        public virtual ICollection<PurchaseConfirmation> PurchaseConfirmations { get; set; }
         public virtual SubscriberSubscription SubscriptionPrice { get; set; }
         //public virtual ICollection<SubscriptionPrice> SubscriptionPrices { get; set; }
 
         public SubscriptionType()
         {
             this.SubscribersSubscriptions = new HashSet<SubscriberSubscription>();
+            this.PurchaseConfirmations = new HashSet<PurchaseConfirmation>();
             //this.SubscriptionPrices = new HashSet<SubscriptionPrice>();
         }
     }

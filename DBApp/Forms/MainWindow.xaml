@@ -64,6 +64,7 @@
         <Grid Grid.Row="1" Grid.Column="1">
             <DataGrid 
                 x:Name="tableContent"
+                IsReadOnly="True"
                 ColumnWidth="*"
             />
         </Grid>

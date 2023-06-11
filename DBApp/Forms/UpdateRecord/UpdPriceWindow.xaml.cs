@@ -81,11 +81,16 @@ namespace DBApp.Forms.UpdateRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = MessageBox.Show("All entered data will replace the existing!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
-                            if (float.TryParse(tbPrice.Text.Trim(), out float price))
+
+                            float price;
+                            bool canConvert = tbPrice.Text.Contains(".") ? float.TryParse(tbPrice.Text.Replace(".", ","), out price) :
+                                float.TryParse(tbPrice.Text.Replace(".", ","), out price);
+
+                            if (canConvert)
                             {
                                 using (var subs = new DbAppContext())
                                 {
@@ -108,7 +113,7 @@ namespace DBApp.Forms.UpdateRecord
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:

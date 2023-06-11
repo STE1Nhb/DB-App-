@@ -48,7 +48,7 @@
             Width="172"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Text="Record ID &#x09; :"
+            Text="Record ID &#x09;:"
             TextAlignment="Left"
             FontSize="20"
         />

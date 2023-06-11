@@ -19,18 +19,18 @@ namespace DBApp
         public int SubscriberId { get; set; }
 
         [Required]
-        [Key]
+        //[Key]
         [Column("type_id",Order = 2)]
         [ForeignKey("SubscriptionType")]
         public int SubscriptionId { get; set; }
 
         public SubscriberSubscription()
         {
-            this.PurchaseConfirmations = new HashSet<PurchaseConfirmation>();
+            //this.PurchaseConfirmations = new HashSet<PurchaseConfirmation>();
         }
         public virtual SubscriptionType SubscriptionType { get; set; }
         public virtual Subscriber Subscriber { get; set; }
-        public virtual ICollection<PurchaseConfirmation> PurchaseConfirmations { get; set; }
+        //public virtual ICollection<PurchaseConfirmation> PurchaseConfirmations { get; set; }
 
     }
 }

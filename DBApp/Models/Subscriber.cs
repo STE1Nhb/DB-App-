@@ -29,9 +29,14 @@ namespace DBApp
 
         public virtual ICollection<SubscriberSubscription> SubscribersSubscriptions { get; set; }
 
+        [ForeignKey("SubscriberId")]
+        public virtual ICollection<PurchaseConfirmation> PurchaseConfirmations { get; set; }
+
+
         public Subscriber()
         {
             this.SubscribersSubscriptions = new HashSet<SubscriberSubscription>();
+            this.PurchaseConfirmations = new HashSet<PurchaseConfirmation>();
         }
     }
 }

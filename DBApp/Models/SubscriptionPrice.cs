@@ -24,10 +24,10 @@ namespace DBApp
 
         public SubscriptionPrice()
         {
-            this.PurchaseConfirmations = new HashSet<PurchaseConfirmation>();
+            //this.PurchaseConfirmations = new HashSet<PurchaseConfirmation>();
         }
         public virtual SubscriptionType SubscriptionType { get; set; }
 
-        public virtual ICollection<PurchaseConfirmation> PurchaseConfirmations { get; set; }
+        //public virtual ICollection<PurchaseConfirmation> PurchaseConfirmations { get; set; }
     }
 }

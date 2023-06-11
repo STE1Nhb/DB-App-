@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,7 +82,7 @@ namespace DBApp.Forms.UpdateRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = MessageBox.Show("All entered data will replace the existing!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
@@ -92,9 +93,18 @@ namespace DBApp.Forms.UpdateRecord
                                     var subSubscription = subs.SubscribersSubscriptions.SingleOrDefault(s => s.SubscriberId == TargetId);
                                     subSubscription.SubscriptionId = type;
 
-                                    subs.SaveChanges();
-                                    ThisMainWindow.RefreshDataGrid();
-                                    this.Close();
+                                    try
+                                    {
+                                        subs.SaveChanges();
+                                        ThisMainWindow.RefreshDataGrid();
+                                        this.Close();
+                                    }
+                                    catch(DbUpdateException)
+                                    {
+                                        MessageBox.Show("Please make sure that entered subscriber Id or subscription Id " +
+                                            "are existing.", "Something went wrong",
+                                            MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
                                 }
                             }
                             else
@@ -108,7 +118,7 @@ namespace DBApp.Forms.UpdateRecord
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:

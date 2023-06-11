@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,9 +73,14 @@ namespace DBApp.Forms.UpdateRecord
                     MessageBox.Show("Please fill at least one field to update.",
                         "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                else if(tbEmail.Text.Length > 50)
+                {
+                    MessageBox.Show("Please make sure that e-mail length does not exceed 50 characters.",
+                       "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 else
                 {
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = MessageBox.Show("All entered data will replace the existing!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
@@ -89,9 +95,17 @@ namespace DBApp.Forms.UpdateRecord
                                     sub.Email = String.IsNullOrEmpty(tbEmail.Text) ? sub.Email : tbEmail.Text.Trim();
                                     sub.BirthDate = String.IsNullOrEmpty(tbDate.Text) ? sub.BirthDate : date;
 
-                                    subs.SaveChanges();
-                                    ThisMainWindow.RefreshDataGrid();
-                                    this.Close();
+                                    try
+                                    {
+                                        subs.SaveChanges();
+                                        ThisMainWindow.RefreshDataGrid();
+                                        this.Close();
+                                    }
+                                    catch(DbUpdateException) 
+                                    {
+                                        MessageBox.Show("Please make sure that all fields are filled out in the right way.",
+                                            "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
                                 }
                             }
                             else
@@ -105,7 +119,7 @@ namespace DBApp.Forms.UpdateRecord
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:

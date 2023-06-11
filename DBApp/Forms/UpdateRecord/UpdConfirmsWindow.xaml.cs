@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
@@ -117,7 +118,7 @@ namespace DBApp.Forms.UpdateRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = MessageBox.Show("All entered data will replace the existing!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
@@ -131,39 +132,59 @@ namespace DBApp.Forms.UpdateRecord
                             {
                                 using (var subs = new DbAppContext())
                                 {
-                                    var confirm = subs.PurchaseConfirmations.SingleOrDefault(s => s.PurchaseId == TargetId);
-                                    var price = (float)
-                                        (
-                                            subs.SubscriptionPrices
-                                            .Where(id => type == 0 ? id.SubscriptionId == confirm.SubscriptionId : id.SubscriptionId == type)
-                                            .Select(p => p.Price)
-                                            .First()
-                                        );
-
-                                    //var purchase = new PurchaseConfirmation() { SubscriberId = sub, SubscriptionId = type, Price = price, PurchaseDate = date };
-                                    //subs.PurchaseConfirmations.Add(purchase);
-
-                                    //subs.SaveChanges();
-                                    //ThisMainWindow.RefreshDataGrid();
-                                    //ClearFields();
-
-                                    confirm.SubscriberId = String.IsNullOrEmpty(tbSub.Text) ? confirm.SubscriberId : sub;
-                                    confirm.SubscriptionId = String.IsNullOrEmpty(tbType.Text) ? confirm.SubscriptionId : type;
-                                    confirm.PurchaseDate = String.IsNullOrEmpty(tbDate.Text) ? confirm.PurchaseDate : date;
-                                    confirm.Price = price;
-
                                     try
                                     {
-                                        subs.SaveChanges();
-                                        ExpirationDateCount();
-                                        ThisMainWindow.RefreshDataGrid();
-                                        this.Close();
+                                        bool contains;
+                                        contains = subs.SubscribersSubscriptions.AsEnumerable().Any(row => sub == row.SubscriberId
+                                        && type == row.SubscriptionId);
+                                        if (contains)
+                                        {
+                                            var confirm = subs.PurchaseConfirmations.SingleOrDefault(s => s.PurchaseId == TargetId);
+                                            var price = (float)
+                                                (
+                                                    subs.SubscriptionPrices
+                                                    .Where(id => type == 0 ? id.SubscriptionId == confirm.SubscriptionId : id.SubscriptionId == type)
+                                                    .Select(p => p.Price)
+                                                    .First()
+                                                );
+
+                                            //var purchase = new PurchaseConfirmation() { SubscriberId = sub, SubscriptionId = type, Price = price, PurchaseDate = date };
+                                            //subs.PurchaseConfirmations.Add(purchase);
+
+                                            //subs.SaveChanges();
+                                            //ThisMainWindow.RefreshDataGrid();
+                                            //ClearFields();
+
+                                            confirm.SubscriberId = String.IsNullOrEmpty(tbSub.Text) ? confirm.SubscriberId : sub;
+                                            confirm.SubscriptionId = String.IsNullOrEmpty(tbType.Text) ? confirm.SubscriptionId : type;
+                                            confirm.PurchaseDate = String.IsNullOrEmpty(tbDate.Text) ? confirm.PurchaseDate : date;
+                                            confirm.Price = price;
+
+                                            //try
+                                            //{
+                                                subs.SaveChanges();
+                                                ExpirationDateCount();
+                                                ThisMainWindow.RefreshDataGrid();
+                                                this.Close();
+                                            //}
+                                            //catch (DbUpdateException)
+                                            //{
+                                            //    MessageBox.Show("Please make sure that subscription type of this subscriber matches up " +
+                                            //        "with subscription type in Subscribers Subscriptions table.", "Something went wrong",
+                                            //        MessageBoxButton.OK, MessageBoxImage.Error);
+                                            //}
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Please make sure that entered Subscriber/Subscription Id is existing one or Subscription type of this Subscriber matches up " +
+                                                    "with the Subscription type in Subscribers Subscriptions table.", "Something went wrong",
+                                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                                        }
                                     }
-                                    catch(DbUpdateException)
+                                    catch (InvalidOperationException)
                                     {
-                                        MessageBox.Show("Please make sure that subscription type of this subscriber matches up " +
-                                            "with subscription type in SubscribersSubscriptions table.", "Something went wrong",
-                                            MessageBoxButton.OK, MessageBoxImage.Error);
+                                        MessageBox.Show("Please make sure that entered Subscription Id has a price.", "Something went wrong",
+                                           MessageBoxButton.OK, MessageBoxImage.Error);
                                     }
                                 }
                             }
@@ -178,7 +199,7 @@ namespace DBApp.Forms.UpdateRecord
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:

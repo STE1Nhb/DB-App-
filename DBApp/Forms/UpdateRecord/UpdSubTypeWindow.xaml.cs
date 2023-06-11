@@ -80,9 +80,14 @@ namespace DBApp.Forms.UpdateRecord
                     MessageBox.Show("Please fill at least one field to update.",
                         "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                else if(tbType.Text.Length > 30)
+                {
+                    MessageBox.Show("Please make sure that title length does not exceed 30 characters.",
+                       "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 else
                 {
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = MessageBox.Show("All entered data will replace the existing!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
@@ -101,7 +106,7 @@ namespace DBApp.Forms.UpdateRecord
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:

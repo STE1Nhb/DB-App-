@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -116,7 +117,8 @@ namespace DBApp.Forms.NewRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = MessageBox.Show("Сarefully check the data you entered before adding it to the table.", 
+                        "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     switch (message)
                     {
                         case MessageBoxResult.Yes:
@@ -125,21 +127,59 @@ namespace DBApp.Forms.NewRecord
                             {
                                 using (var subs = new DbAppContext())
                                 {
-                                    var price = (float)
-                                        (
-                                            subs.SubscriptionPrices
-                                            .Where(id => id.SubscriptionId == type)
-                                            .Select(p => p.Price)
-                                            .First()
-                                        );
+                                    try
+                                    {
+                                        bool contains;
+                                        contains = subs.SubscribersSubscriptions.AsEnumerable().Any(row => sub == row.SubscriberId
+                                        && type == row.SubscriptionId);
+                                        if (contains)
+                                        {
+                                            var price = (float)
+                                                (
+                                                    subs.SubscriptionPrices
+                                                    .Where(id => id.SubscriptionId == type)
+                                                    .Select(p => p.Price)
+                                                    .First()
+                                                );
 
-                                    var purchase = new PurchaseConfirmation() { SubscriberId = sub, SubscriptionId = type, Price = price, PurchaseDate = date };
-                                    subs.PurchaseConfirmations.Add(purchase);
+                                            var purchase = new PurchaseConfirmation()
+                                            {
+                                                SubscriberId = sub,
+                                                SubscriptionId = type,
+                                                Price = price,
+                                                PurchaseDate = date
+                                            };
+                                            subs.PurchaseConfirmations.Add(purchase);
 
-                                    subs.SaveChanges();
-                                    ThisMainWindow.RefreshDataGrid();
-                                    ExpirationDateCount();
-                                    ClearFields();
+
+                                            //try
+                                            //{
+                                                subs.SaveChanges();
+                                                ThisMainWindow.RefreshDataGrid();
+                                                ExpirationDateCount();
+                                                ClearFields();
+                                            //}
+
+                                            //catch (DbUpdateException)
+                                            //{
+                                            //    MessageBox.Show("Please make sure that entered Subscriber Id is existing one or Subscription type of this Subscriber matches up " +
+                                            //        "with the Subscription type in Subscribers Subscriptions table.", "Something went wrong",
+                                            //        MessageBoxButton.OK, MessageBoxImage.Error);
+                                            //}
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Please make sure that entered Subscriber/Subscription Id is existing one or Subscription type of this Subscriber matches up " +
+                                                    "with the Subscription type in Subscribers Subscriptions table.", "Something went wrong",
+                                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                                        }
+
+                                    }
+                                    catch (InvalidOperationException)
+                                    {
+                                        MessageBox.Show("Please make sure that entered Subscription Id has a price.", "Something went wrong",
+                                           MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
                                 }
                             }
                             else
@@ -153,7 +193,7 @@ namespace DBApp.Forms.NewRecord
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:
@@ -182,12 +222,10 @@ namespace DBApp.Forms.NewRecord
                         .First()
                     )
                     .AddMonths(1);
-                
+
                 var expDate = new ExpirationDate() { PurchaseId = lastPurchaseId, ExpiryDate = futureDate };
                 subs.ExpirationDates.Add(expDate);
                 subs.SaveChanges();
-
-                
             }
         }
         private void ClearFields()

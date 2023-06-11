@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Remoting.Messaging;
 
 namespace DBApp
 {
@@ -19,14 +20,14 @@ namespace DBApp
 
         [Required]
         //[Key]
-        [ForeignKey("SubscriberSubscription")]
         [Column("subscriber_id",Order = 2)]
+        //[ForeignKey("SubscriberSubscription")]
         public int SubscriberId { get; set; }
 
         [Required]
         [Column("type_id",Order = 3)]
         //[Key]
-        [ForeignKey("SubscriberSubscription")]
+        //[ForeignKey("SubscriberSubscription")]
         public int SubscriptionId { get; set; }
 
         [Column("subscription_price")]
@@ -37,8 +38,12 @@ namespace DBApp
         [Required]
         public DateTime PurchaseDate { get; set; }
 
-        public virtual SubscriptionPrice SubscriptionPrice { get; set; }
-        public virtual SubscriberSubscription SubscriberSubscription { get; set; }
+        //public virtual SubscriptionPrice SubscriptionPrice { get; set; }
+
+        public virtual Subscriber Subscriber { get; set; }
+        public virtual SubscriptionType SubscriptionType { get; set; }
+
+        //public virtual SubscriberSubscription SubscriberSubscription { get; set; }
         public virtual ExpirationDate ExpirationDate { get; set; }
 
         //public virtual ICollection<ExpirationDate> ExpirationDates { get; set; }

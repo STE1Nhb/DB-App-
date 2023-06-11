@@ -22,8 +22,8 @@ namespace DBApp.Forms
     public partial class IdRecieverWin : Window
     {
         private MainWindow thisMainWindow;
-        private (byte, byte, int) ChangeDetails { get; set; } // details of the change type and the target for change
-        public IdRecieverWin((byte, byte, int) details, MainWindow thisMainWindow)
+        private (byte, byte) ChangeDetails { get; set; } // details of the change type and the target for change
+        public IdRecieverWin((byte, byte) details, MainWindow thisMainWindow)
         {
             this.thisMainWindow = thisMainWindow;
             ChangeDetails = details;
@@ -77,113 +77,197 @@ namespace DBApp.Forms
             MessageBoxResult message;
             if (sender == btnOk)
             {
-                if (string.IsNullOrEmpty(tbId.Text) || !int.TryParse(tbId.Text, out int id) || id < 1 || id > ChangeDetails.Item3 )
+                using (DbAppContext subs = new DbAppContext())
                 {
-                    MessageBox.Show("Please make sure that you entered existing ID",
-                        "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else
-                {
-                    Window win;
-                    message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    switch (message)
+                    bool contains;
+
+                    if (string.IsNullOrEmpty(tbId.Text) || !int.TryParse(tbId.Text, out int id) || id < 1)
                     {
-                        case MessageBoxResult.Yes:
-                            if (ChangeDetails.Item1 == 1)
+                        MessageBox.Show("Please make sure that you enter existing ID",
+                            "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        Window win;
+                        if (ChangeDetails.Item1 == 1)
+                        {
+                            try
                             {
                                 switch (ChangeDetails.Item2)
                                 {
                                     case 1:
-                                        win = new UpdSubWin(id, thisMainWindow);
-                                        win.Show();
-                                        break;
+                                        contains = subs.Subscribers.AsEnumerable().Any(row => id == row.SubscriberId);
+                                        if (contains)
+                                        {
+                                            win = new UpdSubWin(id, thisMainWindow);
+                                            win.Show();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Please make sure that you enter existing ID",
+                                                "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        }
+                                    break;
 
                                     case 2:
-                                        win = new UpdSubTypeWin(id, thisMainWindow);
-                                        win.Show();
-                                        break;
+                                        contains = subs.SubscriptionTypes.AsEnumerable().Any(row => id == row.SubscriptionId);
+                                        if (contains)
+                                        {
+                                            win = new UpdSubTypeWin(id, thisMainWindow);
+                                            win.Show();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Please make sure that you enter existing ID",
+                                                "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        }
+                                    break;
 
                                     case 3:
-                                        win = new UpdSubSubscriptionWin(id, thisMainWindow);
-                                        win.Show();
-                                        break;
+                                        contains = subs.SubscribersSubscriptions.AsEnumerable().Any(row => id == row.SubscriberId);
+                                        if (contains)
+                                        {
+                                            win = new UpdSubSubscriptionWin(id, thisMainWindow);
+                                            win.Show();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Please make sure that you enter existing ID",
+                                                "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        }
+                                    break;
 
                                     case 4:
-                                        win = new UpdPriceWin(id, thisMainWindow);
-                                        win.Show();
-                                        break;
+                                        contains = subs.SubscriptionPrices.AsEnumerable().Any(row => id == row.SubscriptionId);
+                                        if (contains)
+                                        {
+                                            win = new UpdPriceWin(id, thisMainWindow);
+                                            win.Show();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Please make sure that you enter existing ID",
+                                                "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        }
+                                    break;
 
                                     case 5:
-                                        win = new UpdConfirmationWin(id, thisMainWindow);
-                                        win.Show();
-                                        break;
+                                        contains = subs.PurchaseConfirmations.AsEnumerable().Any(row => id == row.PurchaseId);
+                                        if (contains)
+                                        {
+                                            win = new UpdConfirmationWin(id, thisMainWindow);
+                                            win.Show();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Please make sure that you enter existing ID",
+                                                "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        }    
+                                    break;
                                 }
-                                this.Close();
                             }
-                            else if (ChangeDetails.Item1 == 2)
+                            catch (ArgumentNullException)
                             {
-                                using (DbAppContext subs = new DbAppContext())
+                                MessageBox.Show("Please make sure that you enter existing ID",
+                                    "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        else if (ChangeDetails.Item1 == 2)
+                        {
+                            try
+                            {
+                                switch (ChangeDetails.Item2)
                                 {
-                                    switch (ChangeDetails.Item2)
-                                    {
-                                        case 1:
+                                    case 1:
+                                        message = MessageBox.Show("All existing data of this user will be permanently deleted!",
+                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                                        if (message == MessageBoxResult.Yes)
+                                        {
                                             var subToDelete = subs.Subscribers.
                                                 SingleOrDefault(s => s.SubscriberId == id);
                                             subs.Subscribers.Remove(subToDelete);
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
-                                            
-                                        break;
+                                        }
+                                    break;
 
-                                        case 2:
+                                    case 2:
+                                        message = MessageBox.Show("All existing data of this subscription will be permanently deleted!",
+                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                                        if (message == MessageBoxResult.Yes)
+                                        {
                                             var typeToDelete = subs.SubscriptionTypes.
                                                 SingleOrDefault(s => s.SubscriptionId == id);
                                             subs.SubscriptionTypes.Remove(typeToDelete);
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
-                                            break;
+                                        }
+                                    break;
 
-                                        case 3:
+                                    case 3:
+                                        message = MessageBox.Show("All existing subscription data of this user will be permanently deleted!",
+                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                                        if (message == MessageBoxResult.Yes)
+                                        {
                                             var subSubscriptionToDelete = subs.SubscribersSubscriptions.
                                                 SingleOrDefault(s => s.SubscriberId == id);
                                             subs.SubscribersSubscriptions.Remove(subSubscriptionToDelete);
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
-                                            break;
+                                        }
+                                    break;
 
-                                        case 4:
+                                    case 4:
+                                        message = MessageBox.Show("All existing purchase data of this subscription will be permanently deleted!",
+                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                                        if (message == MessageBoxResult.Yes)
+                                        {
                                             var typePriceToDelete = subs.SubscriptionPrices.
                                                 SingleOrDefault(s => s.SubscriptionId == id);
                                             subs.SubscriptionPrices.Remove(typePriceToDelete);
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
-                                            break;
+                                        }
+                                    break;
 
-                                        case 5:
+                                    case 5:
+                                        message = MessageBox.Show("All existing purchase data of this subscription will be permanently deleted!",
+                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                                        if (message == MessageBoxResult.Yes)
+                                        {
                                             var purchaseToDelete = subs.PurchaseConfirmations.
                                                 SingleOrDefault(s => s.PurchaseId == id);
                                             subs.PurchaseConfirmations.Remove(purchaseToDelete);
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
-                                            break;
-                                    }
-                                    this.Close();
+                                        }
+                                    break;
                                 }
                             }
-                        break;
+                            catch (ArgumentNullException)
+                            {
+                                MessageBox.Show("Please make sure that you enter existing ID",
+                                    "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 switch (message)
                 {
                     case MessageBoxResult.Yes:
-                        this.Close();
                     break;
                 }
             }
+            this.Close();
         }
     }
 }
