@@ -14,6 +14,11 @@ using System.Windows.Shapes;
 
 namespace DBApp.Forms.NewRecord
 {
+    /// <summary>
+    /// Represents a form with fields to be filled in, by which you can add data to the subscription_types table.
+    /// </summary>
+    /// <seealso cref="System.Windows.Window" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     public partial class AddSubscriptionWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
@@ -23,15 +28,27 @@ namespace DBApp.Forms.NewRecord
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Makes the placeholder of TextBoxes visible on mouse click.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (tbType.IsKeyboardFocused)
+            {
+                Keyboard.ClearFocus();
+            }
+        }
 
         /// <summary>
-        /// Handles the IsKeyboardFocused event of the tbType control.
+        /// Makes the placeholder of tbType TextBox visible/invisible when keyboard focus changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbType_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbType.IsKeyboardFocused == true)
+            if (tbType.IsKeyboardFocused)
             {
                 typePlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -42,7 +59,7 @@ namespace DBApp.Forms.NewRecord
         }
 
         /// <summary>
-        /// Handles the Click event of the btnCancel control.
+        /// Cancels the changes on btnCancel button click.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -52,7 +69,7 @@ namespace DBApp.Forms.NewRecord
         }
 
         /// <summary>
-        /// Handles the Click event of the btnOk control.
+        /// Adds a record to the table on btnOk click.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -98,7 +115,7 @@ namespace DBApp.Forms.NewRecord
                                 ThisMainWindow.RefreshDataGrid();
                                 ClearFields();
                             }
-                        break;
+                            break;
                     }
                 }
             }
@@ -109,10 +126,14 @@ namespace DBApp.Forms.NewRecord
                 {
                     case MessageBoxResult.Yes:
                         this.Close();
-                    break;
+                        break;
                 }
             }
         }
+
+        /// <summary>
+        /// Clears the fields of TextBoxes.
+        /// </summary>
         private void ClearFields()
         {
             tbType.Clear();

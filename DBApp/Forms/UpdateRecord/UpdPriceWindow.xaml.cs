@@ -15,8 +15,10 @@ using System.Windows.Shapes;
 namespace DBApp.Forms.UpdateRecord
 {
     /// <summary>
-    /// Interaction logic for UpdPriceWin.xaml
+    /// Represents a form with fields to be filled in, by which you can modify the record in subscription_prices table.
     /// </summary>
+    /// <seealso cref="System.Windows.Window" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     public partial class UpdPriceWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
@@ -29,13 +31,26 @@ namespace DBApp.Forms.UpdateRecord
         }
 
         /// <summary>
-        /// Handles the IsKeyboardFocused event of the tbPrice control.
+        /// Makes the placeholder of TextBoxes visible on mouse click.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (tbPrice.IsKeyboardFocused)
+            {
+                Keyboard.ClearFocus();
+            }
+        }
+
+        /// <summary>
+        /// Makes the placeholder of tbPrice TextBox visible/invisible when keyboard focus changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbPrice_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbPrice.IsKeyboardFocused == true)
+            if (tbPrice.IsKeyboardFocused)
             {
                 pricePlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -46,7 +61,7 @@ namespace DBApp.Forms.UpdateRecord
         }
 
         /// <summary>
-        /// Handles the Click event of the btnCancel control.
+        /// Cancels the changes on btnCancel button click.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -56,7 +71,7 @@ namespace DBApp.Forms.UpdateRecord
         }
 
         /// <summary>
-        /// Handles the Click event of the btnOk control.
+        /// Modifies the table record on btnOk click.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -107,7 +122,7 @@ namespace DBApp.Forms.UpdateRecord
                                 MessageBox.Show("Please make sure that all fields are filled out in the right way.",
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                        break;
+                            break;
                     }
                 }
             }
@@ -118,7 +133,7 @@ namespace DBApp.Forms.UpdateRecord
                 {
                     case MessageBoxResult.Yes:
                         this.Close();
-                    break;
+                        break;
                 }
             }
         }

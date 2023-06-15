@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DBApp.Forms.NewRecord"
         mc:Ignorable="d"
+        MouseDown="Window_MouseDown"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Title="New Confirmation" Height="240" Width="420">
-    <Grid>
+    <Grid Background="#97BCC7">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -30,6 +31,9 @@
             FontSize="16"
             Content="Ok"
             Click="btnOk_Click"
+            Background="#F2F1EF
+
+"
         />
         <Button 
             x:Name="btnCancel"
@@ -42,6 +46,7 @@
             FontSize="16"
             Content="Cancel"
             Click="btnCancel_Click"
+            Background="#F2F1EF"
         />
         
         <TextBlock 
@@ -52,9 +57,10 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             xml:space="preserve"
-            Text="Subscriber ID&#x09; :"
+            Text="Subscriber ID"
             TextAlignment="Left"
             FontSize="20"
+            FontWeight="Medium"
         />
         <TextBlock
             Grid.Row="1"
@@ -63,9 +69,10 @@
             Width="172"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Text="Subscription ID&#x09; :"
+            Text="Subscription ID"
             TextAlignment="Left"
             FontSize="20"
+            FontWeight="Medium"
         />
         <TextBlock
             Grid.Row="2"
@@ -74,9 +81,10 @@
             Width="172"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Text="Purchase date&#x09; :"
+            Text="Purchase date"
             TextAlignment="Left"
             FontSize="20"
+            FontWeight="Medium"
         />
         
 
@@ -90,6 +98,7 @@
             Opacity="1"
             Text="Enter subscriber ID"
             TextAlignment="Justify"
+            FontWeight="Bold"
         />
         <TextBlock
             x:Name="typePlaceholder"
@@ -101,6 +110,7 @@
             Opacity="1"
             Text="Enter subscription ID"
             TextAlignment="Justify"
+            FontWeight="Bold"
         />
         <TextBlock
             x:Name="datePlaceholder"
@@ -112,6 +122,7 @@
             Opacity="1"
             Text="Enter purchase date"
             TextAlignment="Justify"
+            FontWeight="Bold"
         />
 
         <TextBox
@@ -125,8 +136,10 @@
             VerticalAlignment="Center"
             IsKeyboardFocusedChanged="tbSub_IsKeyboardFocused"
             Panel.ZIndex="1"
-            Opacity="0.7"
+            Opacity="0.8"
             TextAlignment="Justify"
+            FontWeight="Medium"
+            Background="#F2F1EF"
         />
 
         <TextBox
@@ -140,8 +153,10 @@
             VerticalAlignment="Center"
             IsKeyboardFocusedChanged="tbType_IsKeyboardFocused"
             Panel.ZIndex="1"
-            Opacity="0.7"
+            Opacity="0.8"
             TextAlignment="Justify"
+            FontWeight="Medium"
+            Background="#F2F1EF"
         />
         <TextBox
             x:Name="tbDate"
@@ -154,8 +169,10 @@
             VerticalAlignment="Center"
             IsKeyboardFocusedChanged="tbDate_IsKeyboardFocusedChanged"
             Panel.ZIndex="1"
-            Opacity="0.7"
+            Opacity="0.8"
             TextAlignment="Justify"
+            FontWeight="Medium"
+            Background="#F2F1EF"
         />
     </Grid>
 </Window>

@@ -6,21 +6,18 @@
         xmlns:local="clr-namespace:DBApp.Forms"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
-        Title="MainWindow" Height="600" Width="800">
-    
+        MouseDown="Window_MouseDown"
+        WindowStartupLocation="CenterScreen"
+        Title="SubDriver" 
+        MinHeight="600" MinWidth="800"
+        Height="600" Width="800">
 
 
-    <Grid>
-        <!--<TextBlock x:Name="clickOut" Text="What's your name?"/>
-        <StackPanel Orientation="Horizontal">
 
-            <Button Width = "100" Height="20"  Content="Add Sub" Click="Button_Click"/>
-            <TextBox x:Name="nameInput"
-                       Width="200" MaxHeight="20"/>
 
-        </StackPanel>-->
+    <Grid Background="#97BCC7">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="75*"/>
         </Grid.ColumnDefinitions>
 
@@ -30,84 +27,210 @@
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock 
-            Grid.Row="0" 
-            Grid.Column="0" 
-            Text="Tools" 
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center"
-            FontSize="30"
-        />
 
-        <Grid Grid.Row="0" Grid.Column="1">
-            <TextBlock 
-                Margin="170,5,0,5"
-                Padding="5"
-                Width="125"
-                Height="30"
-                FontSize="15"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                TextAlignment="Justify"
-                Text="Choose the Table:"
-            />
-            <ComboBox 
-                x:Name="tableList"
-                Margin="295,7,100,7"
-                Width="200"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                SelectionChanged="tableList_SelectionChanged"
-            />
+        <Grid>
+            <Viewbox  Margin="15,5,120,0"  HorizontalAlignment="Left">
+                <Image x:Name="logo" 
+                        Source="/logo_var4.png" 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Left"
+                />
+            </Viewbox>
+
+            <Viewbox>
+                <TextBlock 
+                    Text="Subscription&#x0a;Driver"
+                    LineStackingStrategy="BlockLineHeight"
+                    Margin="70,5,1,1"
+                    Panel.ZIndex="5"
+                    FontSize="16"
+                    FontWeight="Medium"
+                />
+            </Viewbox>
         </Grid>
-        
+
+
+        <Viewbox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left">
+
+            <Grid>
+                <TextBlock
+                    x:Name="tbSearch_Placeholder"
+                    Margin="20,0,280,1"
+                    Width="125"
+                    Height="20"
+                    FontSize="15"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Panel.ZIndex="0"
+                    Focusable="False"
+                    TextAlignment="Justify"
+                    Text="Search"
+                    FontWeight="Bold"
+                />
+
+                <TextBox 
+                    x:Name="tbSearch"
+                    Margin="15,15,450,15"
+                    Padding="2,0,0,0"
+                    Width="340"
+                    Height="25"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Opacity="0.8"
+                    TextAlignment="Justify"
+                    IsKeyboardFocusedChanged="tbSearch_IsKeyboardFocusedChanged"
+                    KeyUp="tbSearch_KeyUp"
+                    ContextMenuService.Placement="Bottom"
+                    ContextMenuService.VerticalOffset="5"
+                    FontSize="15"
+                    FontWeight="Medium"
+                    Background="#F2F1EF">
+
+
+                    <TextBox.ContextMenu>
+                        <ContextMenu x:Name="searchMenu"
+                                    Width="280"
+                                    BorderThickness="1"
+                                    Background="#F2F1EF"
+                                    >
+                            <MenuItem Name="searchFilterOne"
+                                    IsCheckable="False"
+                                    Height="25"
+                                    FontSize="15"
+                                    Click="searchFilterOne_Click"
+                                    Background="#F2F1EF"
+                                    >
+                            </MenuItem>
+
+                            <MenuItem Name="searchFilterTwo"
+                                    IsCheckable="False"
+                                    Height="25"
+                                    FontSize="15"
+                                    Click="searchFilterTwo_Click"
+                                    Background="#F2F1EF"
+                                    >
+                            </MenuItem>
+
+                            <MenuItem Name="searchFilterThree"
+                                    IsCheckable="False"
+                                    Height="25"
+                                    FontSize="15"
+                                    Click="searchFilterThree_Click"
+                                    Background="#F2F1EF"
+                                    >
+                            </MenuItem>
+
+                            <MenuItem Name="searchFilterFour"
+                                    IsCheckable="False"
+                                    Height="25"
+                                    FontSize="15"
+                                    Click="searchFilterFour_Click"
+                                    Background="#F2F1EF"
+                                    >
+                            </MenuItem>
+
+                            <MenuItem Name="searchFilterFive"
+                                    IsCheckable="False"
+                                    Height="25"
+                                    FontSize="15"
+                                    Click="searchFilterFive_Click"
+                                    Background="#F2F1EF"
+                                    >
+                            </MenuItem>
+                        </ContextMenu>
+                    </TextBox.ContextMenu>
+                </TextBox>
+            </Grid>
+        </Viewbox>
+
+        <Viewbox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
+            <Grid>
+                <TextBlock 
+                    Margin="240,5,220,5"
+                    Padding="0,3,0,0"
+                    Width="125"
+                    Height="30"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Panel.ZIndex="1"
+                    TextAlignment="Center"
+                    Text="Choose the Table"
+                    FontSize="16"
+                    FontWeight="Medium"
+                />
+                <ComboBox 
+                    x:Name="tableList"
+                    Margin="5,15,10,15"
+                    Width="200"
+                    Height="25"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Panel.ZIndex="1"
+                    SelectionChanged="tableList_SelectionChanged"
+                    FontWeight="Medium"
+                    Background="#F2F1EF"
+                />
+            </Grid>
+        </Viewbox>
+
         <Grid Grid.Row="1" Grid.Column="1">
             <DataGrid 
                 x:Name="tableContent"
+                Margin="10,0,0,0"
                 IsReadOnly="True"
                 ColumnWidth="*"
+                Panel.ZIndex="0"
+                Background="#F2F1EF"
             />
         </Grid>
-        <Button
-            x:Name="btnAdd"
-            Grid.Row="1" 
-            Grid.Column="0"
-            Margin="10"
-            Width="120"
-            Height="50"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Center"
-            Content="Add"
-            FontSize="25"
-            Click="btnAdd_Click"
-        />
 
-        <Button
-            x:Name="btnUpd"
-            Grid.Row="1" 
-            Grid.Column="0"
-            Margin="10,70"
-            Width="120"
-            Height="50"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Center"
-            Content="Update"
-            FontSize="25"
-            Click="btnUpd_Click"
-        />
+        <Viewbox  Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
+            <Grid>
+                <Button
+                    x:Name="btnAdd"
+                    Grid.Row="1" 
+                    Grid.Column="0"
+                    Margin="10"
+                    Width="120"
+                    Height="50"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Background="#F2F1EF"
+                    Content="Add"
+                    FontSize="25"
+                    Click="btnAdd_Click"
+                />
+                
+                <Button
+                    x:Name="btnUpd"
+                    Grid.Row="1" 
+                    Grid.Column="0"
+                    Margin="10,70,10,10"
+                    Width="120"
+                    Height="50"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Background="#F2F1EF"
+                    Content="Update"
+                    FontSize="25"
+                    Click="btnUpd_Click"
+                />
 
-        <Button
-            x:Name="btnDel"
-            Grid.Row="1" 
-            Grid.Column="0"
-            Margin="10,130"
-            Width="120"
-            Height="50"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Center"
-            Content="Delete"
-            FontSize="25"
-            Click="btnDel_Click"
-        />
+                <Button
+                    x:Name="btnDel"
+                    Grid.Row="1" 
+                    Grid.Column="0"
+                    Margin="10,130,10,10"
+                    Width="120"
+                    Height="50"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Background="#F2F1EF"
+                    Content="Delete"
+                    FontSize="25"
+                    Click="btnDel_Click"
+                />
+            </Grid>
+        </Viewbox>
     </Grid>
 </Window>

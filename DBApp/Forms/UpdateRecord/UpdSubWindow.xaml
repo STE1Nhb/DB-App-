@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DBApp.Forms.UpdateRecord"
         mc:Ignorable="d"
+        MouseDown="Window_MouseDown"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Title="Update Subscriber" Height="240" Width="420">
-    
-    <Grid>
+
+    <Grid Background="#97BCC7">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -30,6 +31,7 @@
             FontSize="16"
             Content="Ok"
             Click="btnOk_Click"
+            Background="#F2F1EF"
         />
         <Button 
             x:Name="btnCancel"
@@ -42,6 +44,7 @@
             FontSize="16"
             Content="Cancel"
             Click="btnCancel_Click"
+            Background="#F2F1EF"
         />
 
         <TextBlock 
@@ -50,9 +53,10 @@
             Width="172"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Text="E-Mail &#x09; &#x09;:"
+            Text="E-Mail"
             TextAlignment="Left"
             FontSize="20"
+            FontWeight="Medium"
         />
         <TextBlock
             Grid.Row="1"
@@ -60,9 +64,10 @@
             Width="172"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Text="Birth Date &#x09;:"
+            Text="Birth Date"
             TextAlignment="Left"
             FontSize="20"
+            FontWeight="Medium"
         />
        
         <TextBlock
@@ -75,6 +80,7 @@
             Opacity="1"
             Text="Enter new E-Mail"
             TextAlignment="Justify"
+            FontWeight="Bold"
         />
         <TextBlock
             x:Name="datePlaceholder"
@@ -86,6 +92,7 @@
             Opacity="1"
             Text="Enter new birth date"
             TextAlignment="Justify"
+            FontWeight="Bold"
         />
 
        
@@ -100,8 +107,10 @@
             VerticalAlignment="Center"
             IsKeyboardFocusedChanged="tbEmail_IsKeyboardFocused"
             Panel.ZIndex="1"
-            Opacity="0.7"
+            Opacity="0.8"
             TextAlignment="Justify"
+            FontWeight="Medium"
+            Background="#F2F1EF"
         />
 
         <TextBox
@@ -115,8 +124,10 @@
             VerticalAlignment="Center"
             IsKeyboardFocusedChanged="tbDate_IsKeyboardFocused"
             Panel.ZIndex="1"
-            Opacity="0.7"
+            Opacity="0.8"
             TextAlignment="Justify"
+            FontWeight="Medium"
+            Background="#F2F1EF"
         />
     </Grid>
 </Window>

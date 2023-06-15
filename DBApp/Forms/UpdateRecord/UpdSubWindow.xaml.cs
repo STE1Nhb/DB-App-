@@ -17,8 +17,10 @@ using System.Windows.Shapes;
 namespace DBApp.Forms.UpdateRecord
 {
     /// <summary>
-    /// Interaction logic for UpdSubWindow.xaml
+    /// Represents a form with fields to be filled in, by which you can modify the record in subscribers table.
     /// </summary>
+    /// <seealso cref="System.Windows.Window" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     public partial class UpdSubWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
@@ -30,9 +32,27 @@ namespace DBApp.Forms.UpdateRecord
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Makes the placeholder of TextBoxes visible on mouse click.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (tbEmail.IsKeyboardFocused || tbDate.IsKeyboardFocused)
+            {
+                Keyboard.ClearFocus();
+            }
+        }
+
+        /// <summary>
+        /// Makes the placeholder of tbEmail TextBox visible/invisible when keyboard focus changes.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbEmail_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbEmail.IsKeyboardFocused == true)
+            if (tbEmail.IsKeyboardFocused)
             {
                 emailPlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -42,6 +62,11 @@ namespace DBApp.Forms.UpdateRecord
             }
         }
 
+        /// <summary>
+        /// Makes the placeholder of tbDate TextBox visible/invisible when keyboard focus changes.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbDate_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (tbDate.IsKeyboardFocused == true)
@@ -54,15 +79,30 @@ namespace DBApp.Forms.UpdateRecord
             }
         }
 
+        /// <summary>
+        /// Cancels the changes on btnCancel button click.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxHandler(sender);
         }
+
+        /// <summary>
+        /// Modifies the table record on btnOk click.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxHandler(sender);
         }
 
+        /// <summary>
+        /// Messages the user about an attempt to perform an action.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
         private void MessageBoxHandler(object sender)
         {
             MessageBoxResult message;
@@ -113,7 +153,7 @@ namespace DBApp.Forms.UpdateRecord
                                 MessageBox.Show("Please make sure that all fields are filled out in the right way.",
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                        break;
+                            break;
                     }
                 }
             }
@@ -124,7 +164,7 @@ namespace DBApp.Forms.UpdateRecord
                 {
                     case MessageBoxResult.Yes:
                         this.Close();
-                    break;
+                        break;
                 }
             }
         }

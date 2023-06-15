@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DBApp.Forms.UpdateRecord"
         mc:Ignorable="d"
+        MouseDown="Window_MouseDown"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Title="Update Subscription Type" Height="240" Width="420">
-    <Grid>
+    <Grid Background="#97BCC7">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -28,6 +29,7 @@
             FontSize="16"
             Content="Ok"
             Click="btnOk_Click"
+            Background="#F2F1EF"
         />
         <Button 
             x:Name="btnCancel"
@@ -40,6 +42,7 @@
             FontSize="16"
             Content="Cancel"
             Click="btnCancel_Click"
+            Background="#F2F1EF"
         />
         <TextBlock
             Grid.Row = "0"
@@ -48,9 +51,10 @@
             Width="172"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Text="Subscription type  :"
+            Text="Subscription type"
             TextAlignment="Left"
             FontSize="20"
+            FontWeight="Medium"
         />
 
         <TextBlock
@@ -63,6 +67,7 @@
             Opacity="1"
             Text="Enter new subscription name"
             TextAlignment="Justify"
+            FontWeight="Bold"
         />
 
 
@@ -77,8 +82,10 @@
             VerticalAlignment="Center"
             IsKeyboardFocusedChanged="tbType_IsKeyboardFocused"
             Panel.ZIndex="1"
-            Opacity="0.7"
+            Opacity="0.8"
             TextAlignment="Justify"
+            FontWeight="Medium"
+            Background="#F2F1EF"
         />
     </Grid>
 </Window>

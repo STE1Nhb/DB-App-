@@ -17,8 +17,10 @@ using System.Windows.Shapes;
 namespace DBApp.Forms.UpdateRecord
 {
     /// <summary>
-    /// Interaction logic for UpdConfirmsWindow.xaml
+    /// Represents a form with fields to be filled in, by which you can modify the record in purchase_confirmations table.
     /// </summary>
+    /// <seealso cref="System.Windows.Window" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     public partial class UpdConfirmationWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
@@ -31,13 +33,26 @@ namespace DBApp.Forms.UpdateRecord
         }
 
         /// <summary>
-        /// Handles the IsKeyboardFocused event of the tbSub control.
+        /// Makes the placeholder of TextBoxes visible on mouse click.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (tbSub.IsKeyboardFocused || tbType.IsKeyboardFocused || tbDate.IsKeyboardFocused)
+            {
+                Keyboard.ClearFocus();
+            }
+        }
+
+        /// <summary>
+        /// Makes the placeholder of tbSub TextBox visible/invisible when keyboard focus changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbSub_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbSub.IsKeyboardFocused == true)
+            if (tbSub.IsKeyboardFocused)
             {
                 subPlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -48,13 +63,13 @@ namespace DBApp.Forms.UpdateRecord
         }
 
         /// <summary>
-        /// Handles the IsKeyboardFocused event of the tbType control.
+        /// Makes the placeholder of tbType TextBox visible/invisible when keyboard focus changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbType_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbType.IsKeyboardFocused == true)
+            if (tbType.IsKeyboardFocused)
             {
                 typePlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -65,13 +80,13 @@ namespace DBApp.Forms.UpdateRecord
         }
 
         /// <summary>
-        /// Handles the IsKeyboardFocusedChanged event of the tbDate control.
+        /// Makes the placeholder of tbDate TextBox visible/invisible when keyboard focus changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbDate_IsKeyboardFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbDate.IsKeyboardFocused == true)
+            if (tbDate.IsKeyboardFocused)
             {
                 datePlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -82,7 +97,7 @@ namespace DBApp.Forms.UpdateRecord
         }
 
         /// <summary>
-        /// Handles the Click event of the btnCancel control.
+        /// Cancels the changes on btnCancel button click.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -92,7 +107,7 @@ namespace DBApp.Forms.UpdateRecord
         }
 
         /// <summary>
-        /// Handles the Click event of the btnOk control.
+        /// Modifies the table record on btnOk click.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -148,31 +163,14 @@ namespace DBApp.Forms.UpdateRecord
                                                     .First()
                                                 );
 
-                                            //var purchase = new PurchaseConfirmation() { SubscriberId = sub, SubscriptionId = type, Price = price, PurchaseDate = date };
-                                            //subs.PurchaseConfirmations.Add(purchase);
-
-                                            //subs.SaveChanges();
-                                            //ThisMainWindow.RefreshDataGrid();
-                                            //ClearFields();
-
                                             confirm.SubscriberId = String.IsNullOrEmpty(tbSub.Text) ? confirm.SubscriberId : sub;
                                             confirm.SubscriptionId = String.IsNullOrEmpty(tbType.Text) ? confirm.SubscriptionId : type;
                                             confirm.PurchaseDate = String.IsNullOrEmpty(tbDate.Text) ? confirm.PurchaseDate : date;
                                             confirm.Price = price;
-
-                                            //try
-                                            //{
-                                                subs.SaveChanges();
-                                                ExpirationDateCount();
-                                                ThisMainWindow.RefreshDataGrid();
-                                                this.Close();
-                                            //}
-                                            //catch (DbUpdateException)
-                                            //{
-                                            //    MessageBox.Show("Please make sure that subscription type of this subscriber matches up " +
-                                            //        "with subscription type in Subscribers Subscriptions table.", "Something went wrong",
-                                            //        MessageBoxButton.OK, MessageBoxImage.Error);
-                                            //}
+                                            subs.SaveChanges();
+                                            ExpirationDateCount();
+                                            ThisMainWindow.RefreshDataGrid();
+                                            this.Close();
                                         }
                                         else
                                         {
@@ -193,7 +191,7 @@ namespace DBApp.Forms.UpdateRecord
                                 MessageBox.Show("Please make sure that all fields are filled out in the right way.",
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                        break;
+                            break;
                     }
                 }
             }
@@ -204,29 +202,33 @@ namespace DBApp.Forms.UpdateRecord
                 {
                     case MessageBoxResult.Yes:
                         this.Close();
-                    break;
+                        break;
                 }
             }
         }
+
+        /// <summary>
+        /// Counts an expiration date of the purchase.
+        /// </summary>
         private void ExpirationDateCount()
         {
             if (!String.IsNullOrEmpty(tbDate.Text))
             {
                 using (var subs = new DbAppContext())
                 {
-                        var expDate = subs.ExpirationDates.SingleOrDefault(s => s.PurchaseId == TargetId);
+                    var expDate = subs.ExpirationDates.SingleOrDefault(s => s.PurchaseId == TargetId);
 
-                        var futureDate = Convert.ToDateTime
-                            (
-                                subs.PurchaseConfirmations
-                                .Where(id => id.PurchaseId == TargetId)
-                                .Select(date => date.PurchaseDate)
-                                .First()
-                            )
-                            .AddMonths(1);
+                    var futureDate = Convert.ToDateTime
+                        (
+                            subs.PurchaseConfirmations
+                            .Where(id => id.PurchaseId == TargetId)
+                            .Select(date => date.PurchaseDate)
+                            .First()
+                        )
+                        .AddMonths(1);
 
-                        expDate.ExpiryDate = futureDate;
-                        subs.SaveChanges();
+                    expDate.ExpiryDate = futureDate;
+                    subs.SaveChanges();
                 }
             }
         }

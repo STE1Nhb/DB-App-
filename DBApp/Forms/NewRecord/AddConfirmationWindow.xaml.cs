@@ -18,8 +18,10 @@ using System.Windows.Shapes;
 namespace DBApp.Forms.NewRecord
 {
     /// <summary>
-    /// Interaction logic for AddConfirmationWindow.xaml
+    /// Represents a form with fields to be filled in, by which you can add data to the purchase_confirmations table.
     /// </summary>
+    /// <seealso cref="System.Windows.Window" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     public partial class AddConfirmationWin : Window
     {
         private MainWindow ThisMainWindow { get; set; }
@@ -30,13 +32,26 @@ namespace DBApp.Forms.NewRecord
         }
 
         /// <summary>
-        /// Handles the IsKeyboardFocused event of the tbSub control.
+        /// Makes the placeholder of TextBoxes visible on mouse click.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (tbSub.IsKeyboardFocused || tbType.IsKeyboardFocused || tbDate.IsKeyboardFocused)
+            {
+                Keyboard.ClearFocus();
+            }
+        }
+
+        /// <summary>
+        /// Makes the placeholder of tbSub TextBox visible/invisible when keyboard focus changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbSub_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbSub.IsKeyboardFocused == true)
+            if (tbSub.IsKeyboardFocused)
             {
                 subPlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -47,13 +62,13 @@ namespace DBApp.Forms.NewRecord
         }
 
         /// <summary>
-        /// Handles the IsKeyboardFocused event of the tbType control.
+        /// Makes the placeholder of tbType TextBox visible/invisible when keyboard focus changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbType_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbType.IsKeyboardFocused == true)
+            if (tbType.IsKeyboardFocused)
             {
                 typePlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -62,15 +77,15 @@ namespace DBApp.Forms.NewRecord
                 typePlaceholder.Visibility = Visibility.Visible;
             }
         }
-       
+
         /// <summary>
-        /// Handles the IsKeyboardFocusedChanged event of the tbDate control.
+        /// Makes the placeholder of tbDate TextBox visible/invisible when keyboard focus changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbDate_IsKeyboardFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbDate.IsKeyboardFocused == true)
+            if (tbDate.IsKeyboardFocused)
             {
                 datePlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -81,7 +96,7 @@ namespace DBApp.Forms.NewRecord
         }
 
         /// <summary>
-        /// Handles the Click event of the btnCancel control.
+        /// Cancels the changes on btnCancel button click.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -91,7 +106,7 @@ namespace DBApp.Forms.NewRecord
         }
 
         /// <summary>
-        /// Handles the Click event of the btnOk control.
+        /// Adds a record to the table on btnOk click.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -149,23 +164,12 @@ namespace DBApp.Forms.NewRecord
                                                 Price = price,
                                                 PurchaseDate = date
                                             };
+
                                             subs.PurchaseConfirmations.Add(purchase);
-
-
-                                            //try
-                                            //{
-                                                subs.SaveChanges();
-                                                ThisMainWindow.RefreshDataGrid();
-                                                ExpirationDateCount();
-                                                ClearFields();
-                                            //}
-
-                                            //catch (DbUpdateException)
-                                            //{
-                                            //    MessageBox.Show("Please make sure that entered Subscriber Id is existing one or Subscription type of this Subscriber matches up " +
-                                            //        "with the Subscription type in Subscribers Subscriptions table.", "Something went wrong",
-                                            //        MessageBoxButton.OK, MessageBoxImage.Error);
-                                            //}
+                                            subs.SaveChanges();
+                                            ThisMainWindow.RefreshDataGrid();
+                                            ExpirationDateCount();
+                                            ClearFields();
                                         }
                                         else
                                         {
@@ -187,7 +191,7 @@ namespace DBApp.Forms.NewRecord
                                 MessageBox.Show("Please make sure that all fields are filled out in the right way.",
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                        break;
+                            break;
                     }
                 }
             }
@@ -198,10 +202,14 @@ namespace DBApp.Forms.NewRecord
                 {
                     case MessageBoxResult.Yes:
                         this.Close();
-                    break;
+                        break;
                 }
             }
         }
+
+        /// <summary>
+        /// Counts an expiration date of the purchase.
+        /// </summary>
         private void ExpirationDateCount()
         {
             using (var subs = new DbAppContext())
@@ -228,6 +236,10 @@ namespace DBApp.Forms.NewRecord
                 subs.SaveChanges();
             }
         }
+
+        /// <summary>
+        /// Clears the fields of TextBoxes.
+        /// </summary>
         private void ClearFields()
         {
             tbSub.Clear();

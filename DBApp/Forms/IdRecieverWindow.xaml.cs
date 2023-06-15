@@ -17,7 +17,7 @@ using DBApp.Forms.UpdateRecord;
 namespace DBApp.Forms
 {
     /// <summary>
-    /// Interaction logic for IdRecieverWindow.xaml
+    /// Represents a form with field to be filled in, which transmits the Id of the modified record.
     /// </summary>
     public partial class IdRecieverWin : Window
     {
@@ -31,13 +31,26 @@ namespace DBApp.Forms
         }
 
         /// <summary>
-        /// Handles the IsKeyboardFocused event of the tbType control.
+        /// Makes the placeholder of TextBoxes visible on mouse click.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (tbId.IsKeyboardFocused)
+            {
+                Keyboard.ClearFocus();
+            }
+        }
+
+        /// <summary>
+        /// Makes the placeholder of tbId TextBox visible/invisible when keyboard focus changes.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void tbId_IsKeyboardFocused(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (tbId.IsKeyboardFocused == true)
+            if (tbId.IsKeyboardFocused)
             {
                 idPlaceholder.Visibility = Visibility.Collapsed;
             }
@@ -48,7 +61,7 @@ namespace DBApp.Forms
         }
 
         /// <summary>
-        /// Handles the Click event of the btnCancel control.
+        /// Cancels the changes on btnCancel button click.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -58,7 +71,7 @@ namespace DBApp.Forms
         }
 
         /// <summary>
-        /// Handles the Click event of the btnOk control.
+        /// Transmits the Id of the modified target to one of the Update forms.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
@@ -121,7 +134,7 @@ namespace DBApp.Forms
                                             MessageBox.Show("Please make sure that you enter existing ID",
                                                 "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                                         }
-                                    break;
+                                        break;
 
                                     case 3:
                                         contains = subs.SubscribersSubscriptions.AsEnumerable().Any(row => id == row.SubscriberId);
@@ -135,7 +148,7 @@ namespace DBApp.Forms
                                             MessageBox.Show("Please make sure that you enter existing ID",
                                                 "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                                         }
-                                    break;
+                                        break;
 
                                     case 4:
                                         contains = subs.SubscriptionPrices.AsEnumerable().Any(row => id == row.SubscriptionId);
@@ -149,7 +162,7 @@ namespace DBApp.Forms
                                             MessageBox.Show("Please make sure that you enter existing ID",
                                                 "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                                         }
-                                    break;
+                                        break;
 
                                     case 5:
                                         contains = subs.PurchaseConfirmations.AsEnumerable().Any(row => id == row.PurchaseId);
@@ -163,7 +176,7 @@ namespace DBApp.Forms
                                             MessageBox.Show("Please make sure that you enter existing ID",
                                                 "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                                         }    
-                                    break;
+                                        break;
                                 }
                             }
                             catch (ArgumentNullException)
@@ -190,7 +203,7 @@ namespace DBApp.Forms
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
                                         }
-                                    break;
+                                        break;
 
                                     case 2:
                                         message = MessageBox.Show("All existing data of this subscription will be permanently deleted!",
@@ -204,7 +217,7 @@ namespace DBApp.Forms
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
                                         }
-                                    break;
+                                        break;
 
                                     case 3:
                                         message = MessageBox.Show("All existing subscription data of this user will be permanently deleted!",
@@ -218,7 +231,7 @@ namespace DBApp.Forms
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
                                         }
-                                    break;
+                                        break;
 
                                     case 4:
                                         message = MessageBox.Show("All existing purchase data of this subscription will be permanently deleted!",
@@ -232,7 +245,7 @@ namespace DBApp.Forms
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
                                         }
-                                    break;
+                                        break;
 
                                     case 5:
                                         message = MessageBox.Show("All existing purchase data of this subscription will be permanently deleted!",
@@ -246,7 +259,7 @@ namespace DBApp.Forms
                                             subs.SaveChanges();
                                             thisMainWindow.RefreshDataGrid();
                                         }
-                                    break;
+                                        break;
                                 }
                             }
                             catch (ArgumentNullException)
@@ -255,6 +268,7 @@ namespace DBApp.Forms
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         }
+                        this.Close();
                     }
                 }
             }
@@ -264,10 +278,10 @@ namespace DBApp.Forms
                 switch (message)
                 {
                     case MessageBoxResult.Yes:
-                    break;
+                        this.Close();
+                        break;
                 }
             }
-            this.Close();
         }
     }
 }

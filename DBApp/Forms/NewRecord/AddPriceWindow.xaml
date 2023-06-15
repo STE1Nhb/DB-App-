@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DBApp.Forms.NewRecord"
         mc:Ignorable="d"
+        MouseDown="Window_MouseDown"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Title="New Price" Height="240" Width="420">
-    <Grid>
+    <Grid Background="#97BCC7">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -29,6 +30,7 @@
             FontSize="16"
             Content="Ok"
             Click="btnOk_Click"
+            Background="#F2F1EF"
         />
         <Button 
             x:Name="btnCancel"
@@ -41,6 +43,7 @@
             FontSize="16"
             Content="Cancel"
             Click="btnCancel_Click"
+            Background="#F2F1EF"
         />
         <TextBlock 
             Grid.Row = "0"
@@ -49,9 +52,10 @@
             Width="172"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Text="Subscription ID&#x09; :"
+            Text="Subscription ID"
             TextAlignment="Left"
             FontSize="20"
+            FontWeight="Medium"
         />
         <TextBlock
             Grid.Row="1"
@@ -60,9 +64,10 @@
             Width="172"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Text="Subscription price :"
+            Text="Subscription price"
             TextAlignment="Left"
             FontSize="20"
+            FontWeight="Medium"
         />
         <TextBlock
             x:Name="typePlaceholder"
@@ -74,6 +79,7 @@
             Opacity="1"
             Text="Enter subscription ID"
             TextAlignment="Justify"
+            FontWeight="Bold"
         />
         <TextBlock
             x:Name="pricePlaceholder"
@@ -85,6 +91,7 @@
             Opacity="1"
             Text="Enter subscription price"
             TextAlignment="Justify"
+            FontWeight="Bold"
         />
 
         <TextBox
@@ -98,8 +105,10 @@
             VerticalAlignment="Center"
             IsKeyboardFocusedChanged="tbType_IsKeyboardFocused"
             Panel.ZIndex="1"
-            Opacity="0.7"
+            Opacity="0.8"
             TextAlignment="Justify"
+            FontWeight="Medium"
+            Background="#F2F1EF"
         />
 
         <TextBox
@@ -113,8 +122,10 @@
             VerticalAlignment="Center"
             IsKeyboardFocusedChanged="tbPrice_IsKeyboardFocused"
             Panel.ZIndex="1"
-            Opacity="0.7"
+            Opacity="0.8"
             TextAlignment="Justify"
+            FontWeight="Medium"
+            Background="#F2F1EF"
         />
     </Grid>
 </Window>
