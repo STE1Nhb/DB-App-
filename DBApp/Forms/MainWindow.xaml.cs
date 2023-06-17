@@ -236,15 +236,22 @@ namespace DBApp.Forms
                         {
                             cmdString = ChangeCmdString();
                         }
-
-                        cmd = new SqlCommand(cmdString, con);
-                        sda = new SqlDataAdapter(cmd);
-                        dt = new DataTable("Subscribers");
-                        sda.Fill(dt);
-                        tableContent.ItemsSource = dt.DefaultView;
-                        tableContent.Columns[0].Header = "Subscriber Id";
-                        tableContent.Columns[1].Header = "Subscriber email";
-                        tableContent.Columns[2].Header = "Subscriber birth date";
+                        try
+                        {
+                            cmd = new SqlCommand(cmdString, con);
+                            sda = new SqlDataAdapter(cmd);
+                            dt = new DataTable("Subscribers");
+                            sda.Fill(dt);
+                            tableContent.ItemsSource = dt.DefaultView;
+                            tableContent.Columns[0].Header = "Subscriber Id";
+                            tableContent.Columns[1].Header = "Subscriber email";
+                            tableContent.Columns[2].Header = "Subscriber birth date";
+                        }
+                        catch(Exception)
+                        {
+                            MessageBox.Show("Make sure that you enter the date in the right way.", 
+                                "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                         break;
 
                     case "Subscription Types":
@@ -310,7 +317,7 @@ namespace DBApp.Forms
                         sda.Fill(dt);
                         tableContent.ItemsSource = dt.DefaultView;
                         tableContent.Columns[0].Header = "Subscription Id";
-                        tableContent.Columns[1].Header = "Subscription price";
+                        tableContent.Columns[1].Header = "Subscription Price ($)";
                         break;
 
                     case "Purchase Confirmations":
@@ -326,16 +333,25 @@ namespace DBApp.Forms
                             cmdString = ChangeCmdString();
                         }
 
-                        cmd = new SqlCommand(cmdString, con);
-                        sda = new SqlDataAdapter(cmd);
-                        dt = new DataTable("purchase_confirmations");
-                        sda.Fill(dt);
-                        tableContent.ItemsSource = dt.DefaultView;
-                        tableContent.Columns[0].Header = "Purchase Id";
-                        tableContent.Columns[1].Header = "Subscriber Id";
-                        tableContent.Columns[2].Header = "Subscription Id";
-                        tableContent.Columns[3].Header = "Subscription Price";
-                        tableContent.Columns[4].Header = "Purchase Date";
+                        try
+                        {
+
+                            cmd = new SqlCommand(cmdString, con);
+                            sda = new SqlDataAdapter(cmd);
+                            dt = new DataTable("purchase_confirmations");
+                            sda.Fill(dt);
+                            tableContent.ItemsSource = dt.DefaultView;
+                            tableContent.Columns[0].Header = "Purchase Id";
+                            tableContent.Columns[1].Header = "Subscriber Id";
+                            tableContent.Columns[2].Header = "Subscription Id";
+                            tableContent.Columns[3].Header = "Subscription Price ($)";
+                            tableContent.Columns[4].Header = "Purchase Date";
+                        }
+                        catch(Exception)
+                        {
+                            MessageBox.Show("Make sure that you enter the date in the right way.",
+                               "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                         break;
 
                     case "Expiry Dates":
@@ -350,14 +366,21 @@ namespace DBApp.Forms
                         {
                             cmdString = ChangeCmdString();
                         }
-
-                        cmd = new SqlCommand(cmdString, con);
-                        sda = new SqlDataAdapter(cmd);
-                        dt = new DataTable("expiry_dates");
-                        sda.Fill(dt);
-                        tableContent.ItemsSource = dt.DefaultView;
-                        tableContent.Columns[0].Header = "Purchase Id";
-                        tableContent.Columns[1].Header = "Expiry Date";
+                        try
+                        {
+                            cmd = new SqlCommand(cmdString, con);
+                            sda = new SqlDataAdapter(cmd);
+                            dt = new DataTable("expiry_dates");
+                            sda.Fill(dt);
+                            tableContent.ItemsSource = dt.DefaultView;
+                            tableContent.Columns[0].Header = "Purchase Id";
+                            tableContent.Columns[1].Header = "Expiry Date";
+                        }
+                        catch(Exception)
+                        {
+                            MessageBox.Show("Make sure that you enter the date in the right way.",
+                               "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                         break;
                 }
                 ContextMenuButtonsUpdate();
@@ -376,6 +399,9 @@ namespace DBApp.Forms
                     searchFilterTwo.Header = "E-Mail";
                     searchFilterThree.Header = "Birth Date";
 
+                    searchFilterOne.Visibility = Visibility.Visible;
+                    searchFilterTwo.Visibility = Visibility.Visible;
+                    searchFilterThree.Visibility = Visibility.Visible;
                     searchFilterFour.Visibility = Visibility.Collapsed;
                     searchFilterFive.Visibility = Visibility.Collapsed;
                     break;
@@ -463,9 +489,46 @@ namespace DBApp.Forms
                     }
                     else if (selectedSearchFilter == 3)
                     {
-                        cmd = "SELECT subscriber_id, subscriber_email, CONVERT(varchar(10),subscriber_birth_date, 103) FROM subscribers " +
-                            $"WHERE subscriber_birth_date LIKE '%{tbSearch.Text.Trim()}%' OR subscriber_birth_date LIKE '{tbSearch.Text.Trim()}%' " +
-                            $"OR subscriber_birth_date LIKE '%{tbSearch.Text.Trim()}'";
+                        try
+                        {
+                           string[] date = new string[3];
+                            if (tbSearch.Text.Trim().Length == 10)
+                            {
+                                if (tbSearch.Text.Trim().Contains('.'))
+                                {
+                                    date = tbSearch.Text.Split('.');
+                                    if (date[0].Length == 2)
+                                        cmd = "SELECT subscriber_id, subscriber_email, CONVERT(varchar(10),subscriber_birth_date, 103) FROM subscribers " +
+                                        $"WHERE '{date[2]}/{date[1]}/{date[0]}' = subscriber_birth_date";
+                                    else
+                                        cmd = "SELECT subscriber_id, subscriber_email, CONVERT(varchar(10),subscriber_birth_date, 103) FROM subscribers " +
+                                        $"WHERE '{date[0]}/{date[1]}/{date[2]}' = subscriber_birth_date";
+
+                                }
+                                else if (tbSearch.Text.Trim().Contains('/'))
+                                {
+                                    date = tbSearch.Text.Split('/');
+                                    if (date[0].Length == 2)
+                                        cmd = "SELECT subscriber_id, subscriber_email, CONVERT(varchar(10),subscriber_birth_date, 103) FROM subscribers " +
+                                        $"WHERE '{date[2]}/{date[1]}/{date[0]}' = subscriber_birth_date";
+                                    else
+                                        cmd = "SELECT subscriber_id, subscriber_email, CONVERT(varchar(10),subscriber_birth_date, 103) FROM subscribers " +
+                                        $"WHERE '{date[0]}/{date[1]}/{date[2]}' = subscriber_birth_date";
+                                }
+                            }
+                            else
+                            {
+                                cmd = "SELECT subscriber_id, subscriber_email, CONVERT(varchar(10),subscriber_birth_date, 103) FROM subscribers " +
+                                $"WHERE subscriber_birth_date LIKE '%{tbSearch.Text.Trim()}%' OR subscriber_birth_date LIKE '{tbSearch.Text.Trim()}%' " +
+                                $"OR subscriber_birth_date LIKE '%{tbSearch.Text.Trim()}'";
+                            }
+                        }
+                        catch(IndexOutOfRangeException)
+                        {
+                            cmd = "SELECT subscriber_id, subscriber_email, CONVERT(varchar(10),subscriber_birth_date, 103) FROM subscribers " +
+                                $"WHERE subscriber_birth_date LIKE '%{tbSearch.Text.Trim()}%' OR subscriber_birth_date LIKE '{tbSearch.Text.Trim()}%' " +
+                                $"OR subscriber_birth_date LIKE '%{tbSearch.Text.Trim()}'";
+                        }
                     }
                     break;
 
@@ -541,9 +604,50 @@ namespace DBApp.Forms
                     }
                     else if (selectedSearchFilter == 5)
                     {
-                        cmd = "SELECT purchase_id, subscriber_id, type_id, subscription_price,CONVERT(varchar(10), purchase_date, 103) FROM purchase_confirmations " +
-                            $"WHERE purchase_date LIKE '%{tbSearch.Text.Trim()}%' OR purchase_date LIKE '{tbSearch.Text.Trim()}%' " +
-                            $"OR purchase_date LIKE '%{tbSearch.Text.Trim()}'";
+                        try
+                        {
+                            string[] date = new string[3];
+                            if (tbSearch.Text.Trim().Length == 10)
+                            {
+                                if (tbSearch.Text.Trim().Contains('.'))
+                                {
+                                    date = tbSearch.Text.Split('.');
+                                    if (date[0].Length == 2)
+                                        cmd = "SELECT purchase_id, subscriber_id, type_id, subscription_price," +
+                                        "CONVERT(varchar(10), purchase_date, 103) FROM purchase_confirmations " +
+                                        $"WHERE '{date[2]}/{date[1]}/{date[0]}' = purchase_date";
+                                    else
+                                        cmd = "SELECT purchase_id, subscriber_id, type_id, subscription_price," +
+                                        "CONVERT(varchar(10), purchase_date, 103) FROM purchase_confirmations " +
+                                        $"WHERE '{date[0]}/{date[1]}/{date[2]}' = purchase_date";
+
+                                }
+                                else if (tbSearch.Text.Trim().Contains('/'))
+                                {
+                                    date = tbSearch.Text.Split('/');
+                                    if (date[0].Length == 2)
+                                        cmd = "SELECT purchase_id, CONVERT(varchar(10), expiry_date, 103) FROM expiry_dates " +
+                                        $"WHERE '{date[2]}/{date[1]}/{date[0]}' = purchase_date";
+                                    else
+                                        cmd = "SELECT purchase_id, subscriber_id, type_id, subscription_price," +
+                                        "CONVERT(varchar(10), purchase_date, 103) FROM purchase_confirmations " +
+                                        $"WHERE '{date[0]}/{date[1]}/{date[2]}' = purchase_date";
+                                }
+                            }
+                            else
+                            {
+                                cmd = "SELECT purchase_id, subscriber_id, type_id, subscription_price," +
+                                "CONVERT(varchar(10), purchase_date, 103) FROM purchase_confirmations " +
+                                $"WHERE purchase_date LIKE '%{tbSearch.Text.Trim()}%' OR purchase_date LIKE '{tbSearch.Text.Trim()}%' " +
+                                $"OR purchase_date LIKE '%{tbSearch.Text.Trim()}'";
+                            }
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            cmd = "SELECT purchase_id, subscriber_id, type_id, subscription_price,CONVERT(varchar(10), purchase_date, 103) FROM purchase_confirmations " +
+                                $"WHERE purchase_date LIKE '%{tbSearch.Text.Trim()}%' OR purchase_date LIKE '{tbSearch.Text.Trim()}%' " +
+                                $"OR purchase_date LIKE '%{tbSearch.Text.Trim()}'";
+                        }
                     }
                     break;
 
@@ -556,9 +660,46 @@ namespace DBApp.Forms
                     }
                     else if (selectedSearchFilter == 2)
                     {
-                        cmd = "SELECT purchase_id, CONVERT(varchar(10), expiry_date, 103) FROM expiry_dates " +
-                            $"WHERE expiry_date LIKE '%{tbSearch.Text.Trim()}%' OR expiry_date LIKE '{tbSearch.Text.Trim()}%' " +
-                            $"OR expiry_date LIKE '%{tbSearch.Text.Trim()}'";
+                        try
+                        {
+                            string[] date = new string[3];
+                            if (tbSearch.Text.Trim().Length == 10)
+                            {
+                                if (tbSearch.Text.Trim().Contains('.'))
+                                {
+                                    date = tbSearch.Text.Split('.');
+                                    if (date[0].Length == 2)
+                                        cmd = "SELECT purchase_id, CONVERT(varchar(10), expiry_date, 103) FROM expiry_dates " +
+                                        $"WHERE '{date[2]}/{date[1]}/{date[0]}' = expiry_date";
+                                    else
+                                        cmd = "SELECT purchase_id, CONVERT(varchar(10), expiry_date, 103) FROM expiry_dates " +
+                                        $"WHERE '{date[0]}/{date[1]}/{date[2]}' = expiry_date";
+
+                                }
+                                else if (tbSearch.Text.Trim().Contains('/'))
+                                {
+                                    date = tbSearch.Text.Split('/');
+                                    if (date[0].Length == 2)
+                                        cmd = "SELECT purchase_id, CONVERT(varchar(10), expiry_date, 103) FROM expiry_dates " +
+                                        $"WHERE '{date[2]}/{date[1]}/{date[0]}' = expiry_date";
+                                    else
+                                        cmd = "SELECT purchase_id, CONVERT(varchar(10), expiry_date, 103) FROM expiry_dates " +
+                                        $"WHERE '{date[0]}/{date[1]}/{date[2]}' = expiry_date";
+                                }
+                            }
+                            else
+                            {
+                                cmd = "SELECT purchase_id, CONVERT(varchar(10), expiry_date, 103) FROM expiry_dates " +
+                                $"WHERE expiry_date LIKE '%{tbSearch.Text.Trim()}%' OR expiry_date LIKE '{tbSearch.Text.Trim()}%' " +
+                                $"OR expiry_date LIKE '%{tbSearch.Text.Trim()}'";
+                            }
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            cmd = "SELECT purchase_id, CONVERT(varchar(10), expiry_date, 103) FROM expiry_dates " +
+                                $"WHERE expiry_date LIKE '%{tbSearch.Text.Trim()}%' OR expiry_date LIKE '{tbSearch.Text.Trim()}%' " +
+                                $"OR expiry_date LIKE '%{tbSearch.Text.Trim()}'";
+                        }
                     }
                     break;
             }

@@ -84,7 +84,7 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
         /// <summary>
@@ -94,16 +94,15 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
         /// <summary>
-        /// Messages the user about an attempt to perform an action.
+        /// Adds ne record to the table.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void MessageBoxHandler(object sender)
+        private void AddNewRecord(object sender)
         {
-            MessageBoxResult message;
             if (sender == btnOk)
             {
                 if ((string.IsNullOrEmpty(tbDate.Text) || string.IsNullOrEmpty(tbEmail.Text)))
@@ -118,43 +117,30 @@ namespace DBApp.Forms.NewRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Сarefully check the data you entered before adding it to the table.", 
-                        "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    switch (message)
+                    if (DateTime.TryParse(tbDate.Text.Trim(), out DateTime date) == true && tbEmail.Text.Contains('@'))
                     {
-                        case MessageBoxResult.Yes:
-                            if (DateTime.TryParse(tbDate.Text.Trim(), out DateTime date) == true && tbEmail.Text.Contains('@'))
-                            {
-                                using (var subs = new DbAppContext())
-                                {
-                                    var sub = new Subscriber() { Email = tbEmail.Text.Trim(), BirthDate = date };
+                        using (var subs = new DbAppContext())
+                        {
+                            var sub = new Subscriber() { Email = tbEmail.Text.Trim(), BirthDate = date };
 
-                                    subs.Subscribers.Add(sub);
+                            subs.Subscribers.Add(sub);
 
-                                    subs.SaveChanges();
-                                    ThisMainWindow.RefreshDataGrid();
-                                    ClearFields();
-                                }
-                            }
+                            subs.SaveChanges();
+                            ThisMainWindow.RefreshDataGrid();
+                            ClearFields();
+                        }
+                    }
 
-                            else
-                            {
-                                MessageBox.Show("Please make sure that all fields are filled out in the right way.", 
-                                    "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                            break;
+                    else
+                    {
+                        MessageBox.Show("Please make sure that all fields are filled out in the right way.", 
+                            "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (message)
-                {
-                    case MessageBoxResult.Yes:
-                        this.Close();
-                        break;
-                }
+                this.Close();
             }
         }
 

@@ -65,7 +65,7 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
         /// <summary>
@@ -75,17 +75,16 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
 
         /// <summary>
-        /// Messages the user about an attempt to perform an action.
+        /// Adds new record to the table.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void MessageBoxHandler(object sender)
+        private void AddNewRecord(object sender)
         {
-            MessageBoxResult message;
             if (sender == btnOk)
             {
                 if (string.IsNullOrEmpty(tbType.Text))
@@ -100,34 +99,21 @@ namespace DBApp.Forms.NewRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Сarefully check the data you entered before adding it to the table.", 
-                        "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    switch (message)
+                    using (var subs = new DbAppContext())
                     {
-                        case MessageBoxResult.Yes:
-                            using (var subs = new DbAppContext())
-                            {
-                                var subscription = new SubscriptionType() { Type = tbType.Text.Trim() };
+                        var subscription = new SubscriptionType() { Type = tbType.Text.Trim() };
 
-                                subs.SubscriptionTypes.Add(subscription);
+                        subs.SubscriptionTypes.Add(subscription);
 
-                                subs.SaveChanges();
-                                ThisMainWindow.RefreshDataGrid();
-                                ClearFields();
-                            }
-                            break;
+                        subs.SaveChanges();
+                        ThisMainWindow.RefreshDataGrid();
+                        ClearFields();
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (message)
-                {
-                    case MessageBoxResult.Yes:
-                        this.Close();
-                        break;
-                }
+                this.Close();
             }
         }
 

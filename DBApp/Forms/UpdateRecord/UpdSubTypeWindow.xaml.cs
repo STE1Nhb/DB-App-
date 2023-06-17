@@ -67,7 +67,7 @@ namespace DBApp.Forms.UpdateRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            UpdateRecord(sender);
         }
 
         /// <summary>
@@ -77,17 +77,16 @@ namespace DBApp.Forms.UpdateRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            UpdateRecord(sender);
         }
 
 
         /// <summary>
-        /// Messages the user about an attempt to perform an action.
+        /// Updates the table record.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void MessageBoxHandler(object sender)
+        private void UpdateRecord(object sender)
         {
-            MessageBoxResult message;
             if (sender == btnOk)
             {
                 if (string.IsNullOrEmpty(tbType.Text))
@@ -102,32 +101,20 @@ namespace DBApp.Forms.UpdateRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("All entered data will replace the existing!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    switch (message)
+                    using (var subs = new DbAppContext())
                     {
-                        case MessageBoxResult.Yes:
-                            using (var subs = new DbAppContext())
-                            {
-                                var type = subs.SubscriptionTypes.SingleOrDefault(s => s.SubscriptionId == TargetId);
-                                type.Type = tbType.Text;
+                        var type = subs.SubscriptionTypes.SingleOrDefault(s => s.SubscriptionId == TargetId);
+                        type.Type = tbType.Text;
 
-                                subs.SaveChanges();
-                                ThisMainWindow.RefreshDataGrid();
-                                this.Close();
-                            }
-                            break;
+                        subs.SaveChanges();
+                        ThisMainWindow.RefreshDataGrid();
+                        this.Close();
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (message)
-                {
-                    case MessageBoxResult.Yes:
-                        this.Close();
-                        break;
-                }
+                this.Close();
             }
         }
     }

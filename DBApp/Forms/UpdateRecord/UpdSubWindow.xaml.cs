@@ -86,7 +86,7 @@ namespace DBApp.Forms.UpdateRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            UpdateRecord(sender);
         }
 
         /// <summary>
@@ -96,16 +96,15 @@ namespace DBApp.Forms.UpdateRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            UpdateRecord(sender);
         }
 
         /// <summary>
-        /// Messages the user about an attempt to perform an action.
+        /// Updates the table record.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void MessageBoxHandler(object sender)
+        private void UpdateRecord(object sender)
         {
-            MessageBoxResult message;
             if (sender == btnOk)
             {
                 if (string.IsNullOrEmpty(tbDate.Text) && string.IsNullOrEmpty(tbEmail.Text))
@@ -120,52 +119,40 @@ namespace DBApp.Forms.UpdateRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("All entered data will replace the existing!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    switch (message)
+                    DateTime date = DateTime.Now;
+
+                    if ( (String.IsNullOrEmpty(tbEmail.Text) || (tbEmail.Text.Contains("@") && tbEmail.Text.Length < 50) ) && 
+                        (String.IsNullOrEmpty(tbDate.Text) || DateTime.TryParse(tbDate.Text.Trim(), out date)) )
                     {
-                        case MessageBoxResult.Yes:
-                            DateTime date = DateTime.Now;
+                        using (var subs = new DbAppContext())
+                        {
+                            var sub = subs.Subscribers.SingleOrDefault(s => s.SubscriberId == TargetId);
+                            sub.Email = String.IsNullOrEmpty(tbEmail.Text) ? sub.Email : tbEmail.Text.Trim();
+                            sub.BirthDate = String.IsNullOrEmpty(tbDate.Text) ? sub.BirthDate : date;
 
-                            if ( (String.IsNullOrEmpty(tbEmail.Text) || (tbEmail.Text.Contains("@") && tbEmail.Text.Length < 50) ) && 
-                                (String.IsNullOrEmpty(tbDate.Text) || DateTime.TryParse(tbDate.Text.Trim(), out date)) )
+                            try
                             {
-                                using (var subs = new DbAppContext())
-                                {
-                                    var sub = subs.Subscribers.SingleOrDefault(s => s.SubscriberId == TargetId);
-                                    sub.Email = String.IsNullOrEmpty(tbEmail.Text) ? sub.Email : tbEmail.Text.Trim();
-                                    sub.BirthDate = String.IsNullOrEmpty(tbDate.Text) ? sub.BirthDate : date;
-
-                                    try
-                                    {
-                                        subs.SaveChanges();
-                                        ThisMainWindow.RefreshDataGrid();
-                                        this.Close();
-                                    }
-                                    catch(DbUpdateException) 
-                                    {
-                                        MessageBox.Show("Please make sure that all fields are filled out in the right way.",
-                                            "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    }
-                                }
+                                subs.SaveChanges();
+                                ThisMainWindow.RefreshDataGrid();
+                                this.Close();
                             }
-                            else
+                            catch(DbUpdateException) 
                             {
                                 MessageBox.Show("Please make sure that all fields are filled out in the right way.",
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                            break;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please make sure that all fields are filled out in the right way.",
+                            "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (message)
-                {
-                    case MessageBoxResult.Yes:
-                        this.Close();
-                        break;
-                }
+                this.Close();
             }
         }
     }

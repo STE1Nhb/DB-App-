@@ -67,7 +67,7 @@ namespace DBApp.Forms.UpdateRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            UpdateRecord(sender);
         }
 
         /// <summary>
@@ -77,16 +77,15 @@ namespace DBApp.Forms.UpdateRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            UpdateRecord(sender);
         }
 
         /// <summary>
-        /// Messages the user of an attempt to perform an action
+        /// Updates the table record.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void MessageBoxHandler(object sender)
+        private void UpdateRecord(object sender)
         {
-            MessageBoxResult message;
             if (sender == btnOk)
             {
                 if (string.IsNullOrEmpty(tbPrice.Text))
@@ -96,45 +95,32 @@ namespace DBApp.Forms.UpdateRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("All entered data will replace the existing!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    switch (message)
+                    float price;
+                    bool canConvert = tbPrice.Text.Contains(".") ? float.TryParse(tbPrice.Text.Replace(".", ","), out price) :
+                        float.TryParse(tbPrice.Text.Replace(".", ","), out price);
+
+                    if (canConvert)
                     {
-                        case MessageBoxResult.Yes:
+                        using (var subs = new DbAppContext())
+                        {
+                            var subPrice = subs.SubscriptionPrices.SingleOrDefault(s => s.SubscriptionId == TargetId);
+                            subPrice.Price = price;
 
-                            float price;
-                            bool canConvert = tbPrice.Text.Contains(".") ? float.TryParse(tbPrice.Text.Replace(".", ","), out price) :
-                                float.TryParse(tbPrice.Text.Replace(".", ","), out price);
-
-                            if (canConvert)
-                            {
-                                using (var subs = new DbAppContext())
-                                {
-                                    var subPrice = subs.SubscriptionPrices.SingleOrDefault(s => s.SubscriptionId == TargetId);
-                                    subPrice.Price = price;
-
-                                    subs.SaveChanges();
-                                    ThisMainWindow.RefreshDataGrid();
-                                    this.Close();
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("Please make sure that all fields are filled out in the right way.",
-                                    "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                            break;
+                            subs.SaveChanges();
+                            ThisMainWindow.RefreshDataGrid();
+                            this.Close();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please make sure that all fields are filled out in the right way.",
+                            "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (message)
-                {
-                    case MessageBoxResult.Yes:
-                        this.Close();
-                        break;
-                }
+                this.Close();
             }
         }
     }

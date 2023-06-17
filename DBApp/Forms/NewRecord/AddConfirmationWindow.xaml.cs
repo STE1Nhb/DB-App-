@@ -102,7 +102,7 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
         /// <summary>
@@ -112,16 +112,15 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
         /// <summary>
-        /// Messages the user about an attempt to perform an action.
+        /// Adds new record to the table.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void MessageBoxHandler(object sender)
+        private void AddNewRecord(object sender)
         {
-            MessageBoxResult message;
             if (sender == btnOk)
             {
                 if (string.IsNullOrEmpty(tbSub.Text) || string.IsNullOrEmpty(tbType.Text) || 
@@ -132,78 +131,65 @@ namespace DBApp.Forms.NewRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Сarefully check the data you entered before adding it to the table.", 
-                        "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    switch (message)
+                    if (int.TryParse(tbSub.Text.Trim(), out int sub) == true && int.TryParse(tbType.Text.Trim(), out int type) &&
+                        DateTime.TryParse(tbDate.Text.Trim(), out DateTime date))
                     {
-                        case MessageBoxResult.Yes:
-                            if (int.TryParse(tbSub.Text.Trim(), out int sub) == true && int.TryParse(tbType.Text.Trim(), out int type) &&
-                                DateTime.TryParse(tbDate.Text.Trim(), out DateTime date))
+                        using (var subs = new DbAppContext())
+                        {
+                            try
                             {
-                                using (var subs = new DbAppContext())
+                                bool contains;
+                                contains = subs.SubscribersSubscriptions.AsEnumerable().Any(row => sub == row.SubscriberId
+                                && type == row.SubscriptionId);
+                                if (contains)
                                 {
-                                    try
+                                    var price = (float)
+                                        (
+                                            subs.SubscriptionPrices
+                                            .Where(id => id.SubscriptionId == type)
+                                            .Select(p => p.Price)
+                                            .First()
+                                        );
+
+                                    var purchase = new PurchaseConfirmation()
                                     {
-                                        bool contains;
-                                        contains = subs.SubscribersSubscriptions.AsEnumerable().Any(row => sub == row.SubscriberId
-                                        && type == row.SubscriptionId);
-                                        if (contains)
-                                        {
-                                            var price = (float)
-                                                (
-                                                    subs.SubscriptionPrices
-                                                    .Where(id => id.SubscriptionId == type)
-                                                    .Select(p => p.Price)
-                                                    .First()
-                                                );
+                                        SubscriberId = sub,
+                                        SubscriptionId = type,
+                                        Price = price,
+                                        PurchaseDate = date
+                                    };
 
-                                            var purchase = new PurchaseConfirmation()
-                                            {
-                                                SubscriberId = sub,
-                                                SubscriptionId = type,
-                                                Price = price,
-                                                PurchaseDate = date
-                                            };
-
-                                            subs.PurchaseConfirmations.Add(purchase);
-                                            subs.SaveChanges();
-                                            ThisMainWindow.RefreshDataGrid();
-                                            ExpirationDateCount();
-                                            ClearFields();
-                                        }
-                                        else
-                                        {
-                                            MessageBox.Show("Please make sure that entered Subscriber/Subscription Id is existing one or Subscription type of this Subscriber matches up " +
-                                                    "with the Subscription type in Subscribers Subscriptions table.", "Something went wrong",
-                                                    MessageBoxButton.OK, MessageBoxImage.Error);
-                                        }
-
-                                    }
-                                    catch (InvalidOperationException)
-                                    {
-                                        MessageBox.Show("Please make sure that entered Subscription Id has a price.", "Something went wrong",
-                                           MessageBoxButton.OK, MessageBoxImage.Error);
-                                    }
+                                    subs.PurchaseConfirmations.Add(purchase);
+                                    subs.SaveChanges();
+                                    ThisMainWindow.RefreshDataGrid();
+                                    ExpirationDateCount();
+                                    ClearFields();
                                 }
+                                else
+                                {
+                                    MessageBox.Show("Please make sure that entered Subscriber/Subscription Id is existing one or Subscription type of this Subscriber matches up " +
+                                            "with the Subscription type in Subscribers Subscriptions table.", "Something went wrong",
+                                            MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+
                             }
-                            else
+                            catch (InvalidOperationException)
                             {
-                                MessageBox.Show("Please make sure that all fields are filled out in the right way.",
-                                    "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show("Please make sure that entered Subscription Id has a price.", "Something went wrong",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                            break;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please make sure that all fields are filled out in the right way.",
+                            "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (message)
-                {
-                    case MessageBoxResult.Yes:
-                        this.Close();
-                        break;
-                }
+                this.Close();
             }
         }
 

@@ -84,7 +84,7 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
         /// <summary>
@@ -94,16 +94,15 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
         /// <summary>
-        /// Messages the user of an attempt to perform an action
+        /// Adds new record to the table.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void MessageBoxHandler(object sender)
+        private void AddNewRecord(object sender)
         {
-            MessageBoxResult message;
             if (sender == btnOk)
             {
                 if ((string.IsNullOrEmpty(tbType.Text) || string.IsNullOrEmpty(tbPrice.Text)))
@@ -113,55 +112,42 @@ namespace DBApp.Forms.NewRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Сarefully check the data you entered before adding it to the table.", 
-                        "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    switch (message)
+                    float price;
+                    bool canConvert = tbPrice.Text.Contains(".") ? float.TryParse(tbPrice.Text.Replace(".", ","), out price) :
+                        float.TryParse(tbPrice.Text.Replace(".", ","), out price);
+
+                    if (int.TryParse(tbType.Text.Trim(), out int type) == true && canConvert && price > 0)
                     {
-                        case MessageBoxResult.Yes:
-                            float price;
-                            bool canConvert = tbPrice.Text.Contains(".") ? float.TryParse(tbPrice.Text.Replace(".", ","), out price) :
-                                float.TryParse(tbPrice.Text.Replace(".", ","), out price);
+                        using (var subs = new DbAppContext())
+                        {
+                            var subPrice = new SubscriptionPrice() { SubscriptionId = type, Price = price };
+                            subs.SubscriptionPrices.Add(subPrice);
 
-                            if (int.TryParse(tbType.Text.Trim(), out int type) == true && canConvert && price > 0)
+                            try
                             {
-                                using (var subs = new DbAppContext())
-                                {
-                                    var subPrice = new SubscriptionPrice() { SubscriptionId = type, Price = price };
-                                    subs.SubscriptionPrices.Add(subPrice);
-
-                                    try
-                                    {
-                                        subs.SaveChanges();
-                                        ThisMainWindow.RefreshDataGrid();
-                                        ClearFields();
-                                    }
-                                    catch(DbUpdateException)
-                                    {
-                                        MessageBox.Show("Please make sure that entered Subscription Id " +
-                                             "is existing one.", "Something went wrong",
-                                             MessageBoxButton.OK, MessageBoxImage.Error);
-                                    }
-
-                                }
+                                subs.SaveChanges();
+                                ThisMainWindow.RefreshDataGrid();
+                                ClearFields();
                             }
-                            else
+                            catch(DbUpdateException)
                             {
-                                MessageBox.Show("Please make sure that all fields are filled out in the right way.",
-                                    "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show("Please make sure that entered Subscription Id " +
+                                        "is existing one.", "Something went wrong",
+                                        MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                            break;
+
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please make sure that all fields are filled out in the right way.",
+                            "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (message)
-                {
-                    case MessageBoxResult.Yes:
-                        this.Close();
-                        break;
-                }
+                this.Close();
             }
         }
 

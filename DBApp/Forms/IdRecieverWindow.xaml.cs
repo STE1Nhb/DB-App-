@@ -29,6 +29,15 @@ namespace DBApp.Forms
             ChangeDetails = details;
             InitializeComponent();
         }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ChangeDetails.Item2 == 1 || ChangeDetails.Item2 == 3)
+                tblockRecord.Text = "Subscriber ID";
+            else if (ChangeDetails.Item2 == 2 || ChangeDetails.Item2 == 4)
+                tblockRecord.Text = "Subscription ID";
+            else
+                tblockRecord.Text = "Purchase ID";
+        }
 
         /// <summary>
         /// Makes the placeholder of TextBoxes visible on mouse click.
@@ -67,7 +76,7 @@ namespace DBApp.Forms
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            UpdateOrDelete(sender);
         }
 
         /// <summary>
@@ -77,17 +86,16 @@ namespace DBApp.Forms
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            UpdateOrDelete(sender);
         }
 
 
         /// <summary>
-        /// Messages the user about an attempt to perform an action.
+        /// Transmits data to the update window or deletes the record based on the ChangeDetails variable value. 
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void MessageBoxHandler(object sender)
+        private void UpdateOrDelete(object sender)
         {
-            MessageBoxResult message;
             if (sender == btnOk)
             {
                 using (DbAppContext subs = new DbAppContext())
@@ -114,13 +122,14 @@ namespace DBApp.Forms
                                         {
                                             win = new UpdSubWin(id, thisMainWindow);
                                             win.Show();
+                                            tbId.Clear();
                                         }
                                         else
                                         {
                                             MessageBox.Show("Please make sure that you enter existing ID",
                                                 "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                                         }
-                                    break;
+                                        break;
 
                                     case 2:
                                         contains = subs.SubscriptionTypes.AsEnumerable().Any(row => id == row.SubscriptionId);
@@ -128,6 +137,7 @@ namespace DBApp.Forms
                                         {
                                             win = new UpdSubTypeWin(id, thisMainWindow);
                                             win.Show();
+                                            tbId.Clear();
                                         }
                                         else
                                         {
@@ -142,6 +152,7 @@ namespace DBApp.Forms
                                         {
                                             win = new UpdSubSubscriptionWin(id, thisMainWindow);
                                             win.Show();
+                                            tbId.Clear();
                                         }
                                         else
                                         {
@@ -156,6 +167,7 @@ namespace DBApp.Forms
                                         {
                                             win = new UpdPriceWin(id, thisMainWindow);
                                             win.Show();
+                                            tbId.Clear();
                                         }
                                         else
                                         {
@@ -170,6 +182,7 @@ namespace DBApp.Forms
                                         {
                                             win = new UpdConfirmationWin(id, thisMainWindow);
                                             win.Show();
+                                            tbId.Clear();
                                         }
                                         else
                                         {
@@ -192,75 +205,51 @@ namespace DBApp.Forms
                                 switch (ChangeDetails.Item2)
                                 {
                                     case 1:
-                                        message = MessageBox.Show("All existing data of this user will be permanently deleted!",
-                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-                                        if (message == MessageBoxResult.Yes)
-                                        {
-                                            var subToDelete = subs.Subscribers.
-                                                SingleOrDefault(s => s.SubscriberId == id);
-                                            subs.Subscribers.Remove(subToDelete);
-                                            subs.SaveChanges();
-                                            thisMainWindow.RefreshDataGrid();
-                                        }
+                                        var subToDelete = subs.Subscribers.
+                                            SingleOrDefault(s => s.SubscriberId == id);
+                                        subs.Subscribers.Remove(subToDelete);
+                                        subs.SaveChanges();
+                                        thisMainWindow.RefreshDataGrid();
+                                        tbId.Clear();
                                         break;
 
                                     case 2:
-                                        message = MessageBox.Show("All existing data of this subscription will be permanently deleted!",
-                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-                                        if (message == MessageBoxResult.Yes)
-                                        {
-                                            var typeToDelete = subs.SubscriptionTypes.
-                                                SingleOrDefault(s => s.SubscriptionId == id);
-                                            subs.SubscriptionTypes.Remove(typeToDelete);
-                                            subs.SaveChanges();
-                                            thisMainWindow.RefreshDataGrid();
-                                        }
+                                        var typeToDelete = subs.SubscriptionTypes.
+                                            SingleOrDefault(s => s.SubscriptionId == id);
+                                        subs.SubscriptionTypes.Remove(typeToDelete);
+                                        subs.SaveChanges();
+                                        thisMainWindow.RefreshDataGrid();
+                                        tbId.Clear();
                                         break;
 
                                     case 3:
-                                        message = MessageBox.Show("All existing subscription data of this user will be permanently deleted!",
-                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-                                        if (message == MessageBoxResult.Yes)
-                                        {
-                                            var subSubscriptionToDelete = subs.SubscribersSubscriptions.
-                                                SingleOrDefault(s => s.SubscriberId == id);
-                                            subs.SubscribersSubscriptions.Remove(subSubscriptionToDelete);
-                                            subs.SaveChanges();
-                                            thisMainWindow.RefreshDataGrid();
-                                        }
+                                        var subSubscriptionToDelete = subs.SubscribersSubscriptions.
+                                            SingleOrDefault(s => s.SubscriberId == id);
+                                        subs.SubscribersSubscriptions.Remove(subSubscriptionToDelete);
+                                        subs.SaveChanges();
+                                        thisMainWindow.RefreshDataGrid();
+                                        tbId.Clear();
                                         break;
 
                                     case 4:
-                                        message = MessageBox.Show("All existing purchase data of this subscription will be permanently deleted!",
-                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-                                        if (message == MessageBoxResult.Yes)
-                                        {
-                                            var typePriceToDelete = subs.SubscriptionPrices.
-                                                SingleOrDefault(s => s.SubscriptionId == id);
-                                            subs.SubscriptionPrices.Remove(typePriceToDelete);
-                                            subs.SaveChanges();
-                                            thisMainWindow.RefreshDataGrid();
-                                        }
+                                        var typePriceToDelete = subs.SubscriptionPrices.
+                                            SingleOrDefault(s => s.SubscriptionId == id);
+                                        subs.SubscriptionPrices.Remove(typePriceToDelete);
+                                        subs.SaveChanges();
+                                        thisMainWindow.RefreshDataGrid();
+                                        tbId.Clear();
                                         break;
 
                                     case 5:
-                                        message = MessageBox.Show("All existing purchase data of this subscription will be permanently deleted!",
-                                            "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-                                        if (message == MessageBoxResult.Yes)
-                                        {
-                                            var purchaseToDelete = subs.PurchaseConfirmations.
-                                                SingleOrDefault(s => s.PurchaseId == id);
-                                            subs.PurchaseConfirmations.Remove(purchaseToDelete);
-                                            subs.SaveChanges();
-                                            thisMainWindow.RefreshDataGrid();
-                                        }
+                                        var purchaseToDelete = subs.PurchaseConfirmations.
+                                            SingleOrDefault(s => s.PurchaseId == id);
+                                        subs.PurchaseConfirmations.Remove(purchaseToDelete);
+                                        subs.SaveChanges();
+                                        thisMainWindow.RefreshDataGrid();
+                                        tbId.Clear();
                                         break;
                                 }
+                                this.Close();
                             }
                             catch (ArgumentNullException)
                             {
@@ -268,19 +257,12 @@ namespace DBApp.Forms
                                     "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         }
-                        this.Close();
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (message)
-                {
-                    case MessageBoxResult.Yes:
-                        this.Close();
-                        break;
-                }
+                this.Close();
             }
         }
     }

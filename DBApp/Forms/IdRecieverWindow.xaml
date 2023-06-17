@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DBApp.Forms"
         mc:Ignorable="d"
+        Loaded="Window_Loaded"
         MouseDown="Window_MouseDown"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
@@ -45,13 +46,13 @@
             Background="#F2F1EF"
         />
         <TextBlock
+            x:Name="tblockRecord"
             Grid.Row = "0"
             Grid.Column = "0"
             Margin="20,6,15,10"
             Width="172"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Text="Record ID"
             TextAlignment="Left"
             FontSize="20"
             FontWeight="Medium"

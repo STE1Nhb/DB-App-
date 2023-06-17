@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="SubDriver.exe" version="1.0.0.4" publicKeyToken="246d1fab0c633766" language="en" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="logo_var4.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="SubDriver" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="SubDriver.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="EntityFramework.dll" size="4991352">
+      <assemblyIdentity name="EntityFramework" version="6.0.0.0" publicKeyToken="B77A5C561934E089" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>/0K8pwRgXhh6u0VSOGixUSjWrxworUCkV51QfTSpU7I=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="EntityFramework.SqlServer.dll" size="591752">
+      <assemblyIdentity name="EntityFramework.SqlServer" version="6.0.0.0" publicKeyToken="B77A5C561934E089" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>qWDdTS8PN7PAn/uVZ8MkJrh5ExDX65NcBMgZw9Rr1J4=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SubDriver.exe" size="119264">
+      <assemblyIdentity name="SubDriver" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>19/2mhNyF8wjP05lkpjbj/bODJFozxtd9uYgJYV1Mhk=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Database\subscription_system.mdf" size="8388608" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>GpjqWnSHZyBHBPYySeAxXmG9MtSQnP5hlA7uZi/aIz0=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Database\subscription_system_log.ldf" size="8388608" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>rax0wOlxXytv521pk8bAg/+4PruNo8l+FBATupmZXhA=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="logo_var4.ico" size="3230">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>DHF1Eaq1pgf/bzt1GKDyBugKPhDcyvhQQKmOFnHm4L4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="SubDriver.exe.config" size="1433">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>GnOSJ/1lJM4d3KfZy28y7HRd6cp7xtg96cr0u0pQaJ8=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=LAPTOP-DVP5OK2A\bespa" issuerKeyHash="a3628d3514e7448e4e2d64c7dfe05a4dcdcad3e4" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>EJyP2JZq3dwtgyCI+8zE44iMflMN8zSoclx+3uGLt4M=</DigestValue></Reference></SignedInfo><SignatureValue>Qimq7kwKvjfZ4ok2ZndkmouHn0X9WCmkI6rxXHO6x9s/VFHgBx5fO+3m7POfKz89C80OPLmiMnL5nFa01uC/XotNpJs3c6Rv2dLIvzkYXwvzKNx36sS+NtbwvPZ3PyNZVrYwPeywlcxcbMkkBgPmYN7FwAQ8r2wDBLIzKKy+SEw=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>vtpQ/9MePC+JQt0TIek1boWPzSQJOKD92d/QyDGq1t+xa3V0DKy4E4EoAnZPDJ+YI+yG6M2iOWetmKh4kVIU6NDySspedD0+WN4gGl5nShEPb5G+ebiPENZbXW7135s1Gk4lgoEIpUt5oCMJBl+x5DCT4JHJQc2ZchVXwoQLstU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="83b78be1de7e5c72a834f30d537e8c88e3c4ccfb8820832ddcdd6a96d88f9c10" Description="" Url=""><as:assemblyIdentity name="SubDriver.exe" version="1.0.0.4" publicKeyToken="246d1fab0c633766" language="en" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=LAPTOP-DVP5OK2A\bespa</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>QI4V2a3fGXeDeGc37Us3OfuH7n2Jv4CdThGnoCfKct4=</DigestValue></Reference></SignedInfo><SignatureValue>M52+2Y2CIFgnuK3M1mPQNuTrbXVeuYVgGD8kn7jUZ7k/IIZ2NtPmwI+C7A1oc2vSKkqlnavx47fx+KUARhuPt64WBxqPcFzfvJvwkV2tFy0MHQngE7hpdMBkLwQtzm2a9K0rjxMnJ+HaHzAbzP2LcAMFXcWgTCaGA50yOoaWaJM=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>vtpQ/9MePC+JQt0TIek1boWPzSQJOKD92d/QyDGq1t+xa3V0DKy4E4EoAnZPDJ+YI+yG6M2iOWetmKh4kVIU6NDySspedD0+WN4gGl5nShEPb5G+ebiPENZbXW7135s1Gk4lgoEIpUt5oCMJBl+x5DCT4JHJQc2ZchVXwoQLstU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB7TCCAVagAwIBAgIQE4crt/OlDIJF6HrDq2b7RzANBgkqhkiG9w0BAQsFADA1MTMwMQYDVQQDHioATABBAFAAVABPAFAALQBEAFYAUAA1AE8ASwAyAEEAXABiAGUAcwBwAGEwHhcNMjMwNjE1MDgyMjAzWhcNMjQwNjE0MTQyMjAzWjA1MTMwMQYDVQQDHioATABBAFAAVABPAFAALQBEAFYAUAA1AE8ASwAyAEEAXABiAGUAcwBwAGEwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAL7aUP/THjwviULdEyHpNW6Fj80kCTig/dnf0MgxqtbfsWt1dAysuBOBKAJ2TwyfmCPshujNojlnrZioeJFSFOjQ8krKXnQ9PljeIBpeZ0oRD2+Rvnm4jxDWW11u9d+bNRpOJYKBCKVLeaAjCQZfseQwk+CRyUHNmXIVV8KEC7LVAgMBAAEwDQYJKoZIhvcNAQELBQADgYEAHntjviDJ2STAYMH4B1dETbDMnnzN3J482A038RaiExxUMcRfAWoawObLAEJCRQfZ0Nhtk/LOsuLqaneamtBMLKm9fOvJLEuUt+8nXfVpVRUwZW3w7uThRPMtim7tPV9KnEt2QuChrMzFkn23UGdAf92HOk0TffL92Z2IOoqW1Hs=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

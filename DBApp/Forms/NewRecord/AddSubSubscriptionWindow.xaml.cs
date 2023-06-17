@@ -83,7 +83,7 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
         /// <summary>
@@ -93,16 +93,15 @@ namespace DBApp.Forms.NewRecord
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxHandler(sender);
+            AddNewRecord(sender);
         }
 
         /// <summary>
-        /// Messages the user about an attempt to perform an action.
+        /// Adds new record to the table.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void MessageBoxHandler(object sender)
+        private void AddNewRecord(object sender)
         {
-            MessageBoxResult message;
             if (sender == btnOk)
             {
                 if ((string.IsNullOrEmpty(tbSub.Text) || string.IsNullOrEmpty(tbType.Text)))
@@ -112,50 +111,37 @@ namespace DBApp.Forms.NewRecord
                 }
                 else
                 {
-                    message = MessageBox.Show("Сarefully check the data you entered before adding it to the table.", 
-                        "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    switch (message)
+                    if (int.TryParse(tbSub.Text.Trim(), out int sub) == true && int.TryParse(tbType.Text.Trim(), out int type))
                     {
-                        case MessageBoxResult.Yes:
-                            if (int.TryParse(tbSub.Text.Trim(), out int sub) == true && int.TryParse(tbType.Text.Trim(), out int type))
-                            {
-                                using (var subs = new DbAppContext())
-                                {
-                                    var subSubscription = new SubscriberSubscription() { SubscriberId = sub, SubscriptionId = type };
-                                    subs.SubscribersSubscriptions.Add(subSubscription);
+                        using (var subs = new DbAppContext())
+                        {
+                            var subSubscription = new SubscriberSubscription() { SubscriberId = sub, SubscriptionId = type };
+                            subs.SubscribersSubscriptions.Add(subSubscription);
 
-                                    try
-                                    {
-                                        subs.SaveChanges();
-                                        ThisMainWindow.RefreshDataGrid();
-                                        ClearFields();
-                                    }
-                                    catch(DbUpdateException)
-                                    {
-                                        MessageBox.Show("Please make sure that entered Subscriber Id or Subscription Id " +
-                                            "are existing.", "Something went wrong",
-                                            MessageBoxButton.OK, MessageBoxImage.Error);
-                                    }
-                                }
-                            }
-                            else
+                            try
                             {
-                                MessageBox.Show("Please make sure that all fields are filled out in the right way.",
-                                    "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                                subs.SaveChanges();
+                                ThisMainWindow.RefreshDataGrid();
+                                ClearFields();
                             }
-                            break;
+                            catch(DbUpdateException)
+                            {
+                                MessageBox.Show("Please make sure that entered Subscriber Id or Subscription Id " +
+                                    "are existing.", "Something went wrong",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please make sure that all fields are filled out in the right way.",
+                            "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             else if (sender == btnCancel)
             {
-                message = MessageBox.Show("All changes will be cancelled!", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (message)
-                {
-                    case MessageBoxResult.Yes:
-                        this.Close();
-                        break;
-                }
+                this.Close();
             }
         }
 

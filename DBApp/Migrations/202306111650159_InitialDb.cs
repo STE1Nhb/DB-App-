@@ -57,7 +57,7 @@
                         Subscriber_SubscriberId = c.Int(),
                     })
                 .PrimaryKey(t => t.subscriber_id)
-                .ForeignKey("dbo.subscribers", t => t.subscriber_id)
+                .ForeignKey("dbo.subscribers", t => t.subscriber_id, cascadeDelete: true)
                 .ForeignKey("dbo.subscription_types", t => t.SubscriptionType_SubscriptionId)
                 .ForeignKey("dbo.subscription_types", t => t.type_id, cascadeDelete: true)
                 .ForeignKey("dbo.subscribers", t => t.Subscriber_SubscriberId)
